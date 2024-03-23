@@ -20,7 +20,6 @@ typedef struct s_philo
 	pthread_mutex_t *right_fork;
 	pthread_mutex_t *left_fork;
 	struct s_philo *next;
-	struct s_philo *prev;
 } t_philo;
 
 typedef struct s_program
@@ -52,7 +51,7 @@ enum e_BOOLEAN
 
 // GENERAL UTLS
 void error_handler(int mode);
-t_philo *init_philo(t_program *program);
+void init_philo(t_program *program);
 
 void parse_and_check(int ac, char **av, t_program *original);
 
@@ -62,5 +61,7 @@ int	ft_atoi(const char *str);
 
 
 // LINKED LIST UTILS
-t_philo	*ft_lstnew_philo();
+t_philo	*ft_lstnew_philo(t_program *program, void *(routine)(void *), int index);
+void	ft_lstadd_back(t_philo **lst, t_philo *new);
+void	ft_lstiter_join(t_philo *lst);
 #endif

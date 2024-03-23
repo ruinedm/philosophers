@@ -11,14 +11,20 @@ void *philo_routine(void *void_program)
 	pthread_mutex_unlock(&program->start_lock);
 }
 
-t_philo *init_philo(t_program *program)
+void init_philo(t_program *program)
 {
-	int philo_count;
+	int i;
 	t_philo *philo_head;
+	t_philo *current_philo;
 
-	philo_count = 0;
-	philo_head = ft_lstnew_philo();
-	pthread_create(&philo_head->philo_id, NULL, philo_routine, (void *)program);
-
-	pthread_join(philo_head->philo_id, NULL);
+	i = 0;
+	philo_head = NULL;
+	while(i < program->philo_count)
+	{
+		current_philo = ft_lstnew_philo(program, philo_routine, i);
+		ft_lstadd_back(&philo_head, current_philo);
+		i++;
+	}
+	ft_lstiter_join(philo_head);
+	program->philo_list = philo_head;
 }
