@@ -11,13 +11,15 @@ typedef int t_bool;
 
 typedef struct s_philo
 {
+	pthread_mutex_t *ptr_start_lock;
 	pthread_t philo_id;
 	int	philo_index;
 	t_bool has_already_eaten;
 	size_t time_to_die;
 	size_t time_to_sleep;
 	size_t time_to_eat;
-	pthread_mutex_t my_fork;
+	pthread_mutex_t *right_fork; // MY FORK
+	pthread_mutex_t *left_fork; // THE (PHILO + 1) FORK
 	struct s_philo *next;
 	struct s_philo *prev;
 } t_philo;
@@ -51,7 +53,8 @@ enum e_BOOLEAN
 enum e_ITER_MODES
 {
 	JOIN_THREADS,
-	INITIALIZE_MUTEXES
+	LOCK_FORKS,
+	SETUP_LEFT_FORK
 };
 
 

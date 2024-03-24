@@ -13,11 +13,11 @@ all: $(NAME)
 $(OBJ): $(HEADER)
 
 $(NAME): $(OBJ)
-	@($(CC) $(FLAGS) $(THREAD_FLAG) $^ -o $@)
+	@($(CC) $(FLAGS) $(THREAD_FLAG) -g $^ -o $@)
 	@echo "Executable linked successfully!"
 
 %.o: %.c
-	@($(CC) $(FLAGS) -c $< -o $@)
+	@($(CC) $(FLAGS) -c -g $< -o $@)
 	@echo "Compiled $<"
 
 clean:

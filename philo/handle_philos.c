@@ -1,13 +1,17 @@
 #include "philo.h"
 
-void *philo_routine(void *void_program)
+void *philo_routine(void *void_philo)
 {
-	t_program *program;
+	t_philo *philo;
 
-	program = (t_program *)void_program;
-	pthread_mutex_lock(&program->start_lock);
-	printf("Yo i am a philosopher and the count is %i\n", program->philo_count);
-	pthread_mutex_unlock(&program->start_lock);
+	philo = (t_philo *)void_philo;
+	while(1)
+	{
+		pthread_mutex_lock(philo->ptr_start_lock);
+		printf("%i is thinking\n", philo->philo_index);
+		pthread_mutex_unlock(philo->ptr_start_lock);
+		sleep(2);
+	}
 }
 
 void init_philo(t_program *program)
@@ -22,11 +26,11 @@ void init_philo(t_program *program)
 	while(i < program->philo_count)
 	{
 		current_philo = ft_lstnew_philo(program, philo_routine, i);
-		printf("Created philo %i\n", i);
 		ft_lstadd_back(&philo_head, current_philo);
 		i++;
 	}
 	pthread_mutex_unlock(&program->start_lock); // CALL FROM MAIN THREAD TO LET THE PHILOS GO
 	ft_lstiter_philo(philo_head, JOIN_THREADS, program->philo_count);
+	ft_lstiter_philo(philo_head, SETUP_LEFT_FORK, program->philo_count);
 	program->philo_list = philo_head;
 }
