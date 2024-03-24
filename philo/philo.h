@@ -17,9 +17,9 @@ typedef struct s_philo
 	size_t time_to_die;
 	size_t time_to_sleep;
 	size_t time_to_eat;
-	pthread_mutex_t *right_fork;
-	pthread_mutex_t *left_fork;
+	pthread_mutex_t my_fork;
 	struct s_philo *next;
+	struct s_philo *prev;
 } t_philo;
 
 typedef struct s_program
@@ -39,12 +39,19 @@ typedef struct s_program
 enum e_ERROR_MODES
 {
 	INPUT_ERROR,
+	MALLOC_ERROR
 };
 
 enum e_BOOLEAN
 {
 	FALSE,
 	TRUE
+};
+
+enum e_ITER_MODES
+{
+	JOIN_THREADS,
+	INITIALIZE_MUTEXES
 };
 
 
@@ -63,5 +70,5 @@ int	ft_atoi(const char *str);
 // LINKED LIST UTILS
 t_philo	*ft_lstnew_philo(t_program *program, void *(routine)(void *), int index);
 void	ft_lstadd_back(t_philo **lst, t_philo *new);
-void	ft_lstiter_join(t_philo *lst);
+void	ft_lstiter_philo(t_philo *lst, int mode, int philo_count);
 #endif
