@@ -15,7 +15,7 @@ t_philo	*ft_lstnew_philo(t_program *program, void *(routine)(void *), int index)
 		free(new_philo);
 		return (NULL);
 	}
-	new_philo->ptr_start_lock = &program->start_lock;
+	new_philo->program = program;
 	pthread_mutex_init(new_philo->right_fork, NULL);
 	new_philo->left_fork= NULL;
 	new_philo->next = NULL;

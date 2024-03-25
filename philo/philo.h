@@ -9,9 +9,27 @@
 
 typedef int t_bool;
 
-typedef struct s_philo
+typedef struct s_philo t_philo;
+typedef struct s_program t_program;
+
+
+struct s_program
 {
-	pthread_mutex_t *ptr_start_lock;
+	pthread_mutex_t start_lock;
+	int philo_count;
+	int original_time_to_die;
+	int original_time_to_eat;
+	int original_time_to_sleep;
+	t_bool is_limited;
+	int number_of_eat;
+	int dead_flag;
+	t_bool is_first_run;
+	t_philo *philo_list;
+};
+
+struct s_philo
+{
+	t_program *program;
 	pthread_t philo_id;
 	int	philo_index;
 	t_bool has_already_eaten;
@@ -22,21 +40,7 @@ typedef struct s_philo
 	pthread_mutex_t *left_fork; // THE (PHILO + 1) FORK
 	struct s_philo *next;
 	struct s_philo *prev;
-} t_philo;
-
-typedef struct s_program
-{
-	pthread_mutex_t start_lock;
-	int philo_count;
-	int original_time_to_die;
-	int original_time_to_eat;
-	int original_time_to_sleep;
-	t_bool is_limited;
-	int number_of_eat;
-	int dead_flag;
-	t_philo *philo_list;
-} t_program;
-
+};
 
 enum e_ERROR_MODES
 {

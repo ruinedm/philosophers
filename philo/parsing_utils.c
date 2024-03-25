@@ -54,6 +54,7 @@ void parse_and_check(int ac, char **av, t_program *original)
 	original->original_time_to_eat = ft_atoi(av[3]);
 	original->original_time_to_sleep = ft_atoi(av[4]);
 	original->is_limited = FALSE;
+	original->is_first_run = TRUE;
 	original->number_of_eat = -1;
 	if(ac == 6)
 	{
