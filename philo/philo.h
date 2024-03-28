@@ -6,7 +6,7 @@
 #include <pthread.h>
 #include <unistd.h>
 #include <limits.h>
-
+#include <sys/time.h>
 typedef int t_bool;
 
 typedef struct s_philo t_philo;
@@ -17,14 +17,14 @@ struct s_program
 {
 	pthread_mutex_t start_lock;
 	int philo_count;
-	int original_time_to_die;
-	int original_time_to_eat;
-	int original_time_to_sleep;
+	int time_to_die;
+	int time_to_eat;
+	int time_to_sleep;
 	t_bool is_limited;
 	int number_of_eat;
 	int dead_flag;
 	t_bool is_first_run;
-	t_philo *philo_list;
+	t_philo *philos_arr;
 };
 
 struct s_philo
@@ -33,13 +33,8 @@ struct s_philo
 	pthread_t philo_id;
 	int	philo_index;
 	t_bool has_already_eaten;
-	size_t time_to_die;
-	size_t time_to_sleep;
-	size_t time_to_eat;
-	pthread_mutex_t *right_fork; // MY FORK
-	pthread_mutex_t *left_fork; // THE (PHILO + 1) FORK
-	struct s_philo *next;
-	struct s_philo *prev;
+	pthread_mutex_t *right_fork;
+	pthread_mutex_t *left_fork;
 };
 
 enum e_ERROR_MODES
@@ -65,17 +60,9 @@ enum e_ITER_MODES
 
 // GENERAL UTLS
 void error_handler(int mode);
-void init_philo(t_program *program);
-
 void parse_and_check(int ac, char **av, t_program *original);
-
-// CONVERSION UTILS
 int	ft_atoi(const char *str);
 
 
-
-// LINKED LIST UTILS
-t_philo	*ft_lstnew_philo(t_program *program, void *(routine)(void *), int index);
-void	ft_lstadd_back(t_philo **lst, t_philo *new);
-void	ft_lstiter_philo(t_philo *lst, int mode, int philo_count);
+void init_philo(t_program *program);
 #endif

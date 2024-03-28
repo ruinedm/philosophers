@@ -50,9 +50,9 @@ void parse_and_check(int ac, char **av, t_program *original)
 	if((ac != 5 && ac != 6) || !is_valid_av(ac, av))
 		error_handler(INPUT_ERROR);
 	original->philo_count = ft_atoi(av[1]);
-	original->original_time_to_die = ft_atoi(av[2]);
-	original->original_time_to_eat = ft_atoi(av[3]);
-	original->original_time_to_sleep = ft_atoi(av[4]);
+	original->time_to_die = ft_atoi(av[2]);
+	original->time_to_eat = ft_atoi(av[3]);
+	original->time_to_sleep = ft_atoi(av[4]);
 	original->is_limited = FALSE;
 	original->is_first_run = TRUE;
 	original->number_of_eat = -1;

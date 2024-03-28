@@ -1,10 +1,10 @@
-CC = cc
-FLAGS = 
+CC = clang
+FLAGS = -fsanitize=thread
 THREAD_FLAG = -pthread
 
 NAME = philosophers
 M_DIR = philo
-SRC = $(M_DIR)/philo.c $(M_DIR)/general_utils.c $(M_DIR)/parsing_utils.c $(M_DIR)/conversion_utils.c $(M_DIR)/linked_list_utils.c $(M_DIR)/handle_philos.c
+SRC = $(M_DIR)/philo.c $(M_DIR)/general_utils.c $(M_DIR)/parsing_utils.c $(M_DIR)/conversion_utils.c $(M_DIR)/handle_philos.c
 OBJ = $(SRC:.c=.o)
 HEADER = $(M_DIR)/philo.h
 
@@ -17,7 +17,7 @@ $(NAME): $(OBJ)
 	@echo "Executable linked successfully!"
 
 %.o: %.c
-	@($(CC) $(FLAGS) -c -g $< -o $@)
+	@($(CC) $(FLAGS) $(THREAD_FLAG) -c -g $< -o $@)
 	@echo "Compiled $<"
 
 clean:
@@ -28,3 +28,4 @@ fclean: clean
 	@(rm -f $(NAME))
 	@echo "Removed executable succsefully!"
 
+re: fclean all
