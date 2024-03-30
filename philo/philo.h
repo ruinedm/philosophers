@@ -7,19 +7,23 @@
 #include <unistd.h>
 #include <limits.h>
 #include <sys/time.h>
-typedef int t_bool;
 
+#define TIME_NOT_INITALIZED -1
+
+typedef int t_bool;
 typedef struct s_philo t_philo;
 typedef struct s_program t_program;
 
 
 struct s_program
 {
-	pthread_mutex_t start_lock;
+	pthread_mutex_t print_lock;
+	int is_locked;
 	int philo_count;
 	int time_to_die;
 	int time_to_eat;
 	int time_to_sleep;
+	long start_timestamp;
 	t_bool is_limited;
 	int number_of_eat;
 	int dead_flag;
@@ -40,7 +44,7 @@ struct s_philo
 enum e_ERROR_MODES
 {
 	INPUT_ERROR,
-	MALLOC_ERROR
+	TIME_ERROR
 };
 
 enum e_BOOLEAN
@@ -65,4 +69,8 @@ int	ft_atoi(const char *str);
 
 
 void init_philo(t_program *program);
+
+// TIME UTILS
+long get_time(void);
+int	ft_usleep(size_t milliseconds);
 #endif

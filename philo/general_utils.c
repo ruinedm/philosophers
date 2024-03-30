@@ -14,7 +14,9 @@ void print_error(char *str)
 
 void error_handler(int mode)
 {
-	if(mode == INPUT_ERROR)
-		print_error("Invalid input!\n");
+	if (mode == INPUT_ERROR)
+		print_error("Error: Invalid input!\n");
+	else if (mode == TIME_ERROR)
+		print_error("Error: Could not retrieve current time!\n");
 	exit(EXIT_FAILURE);
 }

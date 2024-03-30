@@ -1,10 +1,10 @@
-CC = clang
+CC = cc
 FLAGS = -fsanitize=thread
 THREAD_FLAG = -pthread
 
 NAME = philosophers
 M_DIR = philo
-SRC = $(M_DIR)/philo.c $(M_DIR)/general_utils.c $(M_DIR)/parsing_utils.c $(M_DIR)/conversion_utils.c $(M_DIR)/handle_philos.c
+SRC = $(M_DIR)/philo.c $(M_DIR)/general_utils.c $(M_DIR)/parsing_utils.c $(M_DIR)/conversion_utils.c $(M_DIR)/handle_philos.c $(M_DIR)/time_utils.c
 OBJ = $(SRC:.c=.o)
 HEADER = $(M_DIR)/philo.h
 
