@@ -9,6 +9,11 @@ time_t get_time(void)
     return (time.tv_sec * 1000 + time.tv_usec / 1000);
 }
 
+time_t get_timestamp(t_program *program)
+{
+	return (get_time() - program->start_timestamp);
+}
+
 int	ft_usleep(size_t milliseconds)
 {
 	size_t	start;

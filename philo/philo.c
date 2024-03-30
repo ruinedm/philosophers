@@ -17,7 +17,7 @@ int main(int ac, char **av)
     t_program original;
 
     parse_and_check(ac, av, &original);
-    pthread_mutex_init(&original.print_lock, NULL);
+    
     init_philo(&original);
     pthread_mutex_destroy(&original.print_lock);
     return 0;

@@ -55,9 +55,10 @@ enum e_BOOLEAN
 
 enum e_ITER_MODES
 {
+	CREATE_THREADS,
 	JOIN_THREADS,
-	LOCK_FORKS,
-	SETUP_LEFT_FORK
+	LINK_FORKS,
+	DESTROY_FORKS
 };
 
 
@@ -71,6 +72,7 @@ int	ft_atoi(const char *str);
 void init_philo(t_program *program);
 
 // TIME UTILS
-long get_time(void);
+time_t get_time(void);
+time_t get_timestamp(t_program *program);
 int	ft_usleep(size_t milliseconds);
 #endif
