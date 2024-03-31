@@ -8,23 +8,15 @@
 #include <limits.h>
 #include <sys/time.h>
 
-#define TIME_NOT_INITALIZED -1
 
 typedef int t_bool;
 typedef struct s_philo t_philo;
 typedef struct s_program t_program;
 
-
-typedef struct s_fork
-{
-	int is_locked;
-	pthread_mutex_t fork;
-} t_fork;
-
 struct s_program
 {
 	pthread_mutex_t print_lock;
-	pthread_mutex_t update_lock;
+	pthread_mutex_t count_lock;
 	int is_locked;
 	int philo_count;
 	int time_to_die;
@@ -33,6 +25,7 @@ struct s_program
 	long start_timestamp;
 	t_bool is_limited;
 	int number_of_eat;
+	int eat_count;
 	int dead_flag;
 	t_bool is_first_run;
 	t_philo *philos_arr;
@@ -44,15 +37,18 @@ struct s_philo
 	pthread_t philo_id;
 	int	philo_index;
 	int last_eat;
-	int eat_count;
-	t_fork *right_fork;
-	t_fork *left_fork;
+	pthread_mutex_t *right_fork;
+	pthread_mutex_t *left_fork;
 };
+
+
+#define TIME_NOT_INITALIZED -1
 
 enum e_ERROR_MODES
 {
 	INPUT_ERROR,
-	TIME_ERROR
+	TIME_ERROR,
+	MALLOC_ERROR,
 };
 
 enum e_BOOLEAN
@@ -69,27 +65,27 @@ enum e_ITER_MODES
 	DESTROY_FORKS
 };
 
-void set_iter(t_philo **philos_arr, int arr_size, int mode);
 
 // GENERAL UTLS
-void error_handler(int mode);
+void error_handler(t_program *program, int mode);
 void parse_and_check(int ac, char **av, t_program *original);
 int	ft_atoi(const char *str);
-
-
+void clean_all(t_program *program);
+void set_iter(t_philo **philos_arr, int arr_size, int mode);
 void init_philo(t_program *program);
+
 
 // TIME UTILS
 time_t get_time(void);
 time_t get_timestamp(t_program *program);
 int	ft_usleep(size_t milliseconds);
 
-
 // PRINTING UTILS
 void print_thinking(t_philo *philo);
 void print_eating(t_philo *philo);
 void print_sleeping(t_philo *philo);
 void print_took_fork(t_philo *philo);
+void print_error(char *str);
 
 
 #endif

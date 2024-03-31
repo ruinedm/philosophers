@@ -1,5 +1,17 @@
 #include "philo.h"
 
+void print_error(char *str)
+{
+	int i;
+
+	i = 0;
+	while(str[i])
+	{
+		write(2, &str[i], 1);
+		i++;
+	}
+}
+
 void print_thinking(t_philo *philo)
 {
 	t_program *program;
@@ -43,6 +55,10 @@ void print_eating(t_philo *philo)
 	pthread_mutex_unlock(&program->print_lock);
 	ft_usleep(program->time_to_eat);
 	if(program->is_limited == TRUE)
-		philo->eat_count--;
+	{
+		pthread_mutex_lock(&program->count_lock);
+		philo->program->eat_count++;
+		pthread_mutex_unlock(&program->count_lock);
+	}
 }
 

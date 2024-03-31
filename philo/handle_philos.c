@@ -1,6 +1,5 @@
 #include "philo.h"
 
-
 static void *philo_routine(void *void_philo)
 {
 	t_philo *philo;
@@ -12,13 +11,13 @@ static void *philo_routine(void *void_philo)
 		ft_usleep(program->time_to_eat / 2);
 	while(TRUE)
 	{
-		pthread_mutex_lock(&philo->right_fork->fork);
+		pthread_mutex_lock(philo->right_fork);
 		print_took_fork(philo);
-		pthread_mutex_lock(&philo->left_fork->fork);
+		pthread_mutex_lock(philo->left_fork);
 		print_took_fork(philo);
 		print_eating(philo);
-		pthread_mutex_unlock(&philo->right_fork->fork);
-		pthread_mutex_unlock(&philo->left_fork->fork);
+		pthread_mutex_unlock(philo->right_fork);
+		pthread_mutex_unlock(philo->left_fork);
 		print_sleeping(philo);
 		print_thinking(philo);
 	}
@@ -35,6 +34,7 @@ void set_iter(t_philo **philos_arr, int arr_size, int mode)
 		while(i < arr_size)
 		{
 			pthread_create(&(*philos_arr)[i].philo_id, NULL, philo_routine, &(*philos_arr)[i]);
+			pthread_detach((*philos_arr)[i].philo_id);
 			i++;
 		}
 	}
@@ -49,23 +49,21 @@ void set_iter(t_philo **philos_arr, int arr_size, int mode)
 			i++;
 		}
 	}
-	else if(mode == DETACH_THREADS)
+}
+
+static void free_forks_on_error(t_program *program, t_philo *philos_arr, int current)
+{
+	int i;
+
+	i = 0;
+	while(i < current)
 	{
-		while(i < arr_size)
-		{
-			pthread_detach((*philos_arr)[i].philo_id);
-			i++;
-		}
+		pthread_mutex_destroy(philos_arr[i].right_fork);
+		free(philos_arr[i].right_fork);
+		i++;
 	}
-	else if(mode == DESTROY_FORKS)
-	{
-		while(i < arr_size)
-		{
-			free((*philos_arr)[i].right_fork);
-			pthread_mutex_destroy(&(*philos_arr)[i].right_fork->fork);
-			i++;
-		}
-	}
+	free(philos_arr);
+	pthread_mutex_destroy(&program->print_lock);
 }
 
 void init_philo(t_program *program)
@@ -75,20 +73,21 @@ void init_philo(t_program *program)
 
 	i = 0;
 	philos_arr = malloc(sizeof(t_philo) * program->philo_count);
+	if(philos_arr == NULL)
+		error_handler(program, MALLOC_ERROR);
 	while (i < program->philo_count)
 	{
 		philos_arr[i].program = program;
 		philos_arr[i].philo_index = i;
-		philos_arr[i].right_fork = malloc(sizeof(t_fork));
+		philos_arr[i].right_fork = malloc(sizeof(pthread_mutex_t));
+		if(philos_arr[i].right_fork == NULL)
+			return (free_forks_on_error(program,philos_arr, i), error_handler(program, MALLOC_ERROR));
 		philos_arr[i].left_fork = NULL;
-		philos_arr[i].eat_count = program->number_of_eat;
 		philos_arr[i].last_eat = get_timestamp(program);
-		pthread_mutex_init(&philos_arr[i].right_fork->fork, NULL);
+		pthread_mutex_init(philos_arr[i].right_fork, NULL);
 		i++;
 	}
-	program->is_locked = FALSE;
 	program->philos_arr = philos_arr;
 	set_iter(&program->philos_arr, program->philo_count, LINK_FORKS);
 	set_iter(&program->philos_arr, program->philo_count, CREATE_THREADS);
-	set_iter(&program->philos_arr, program->philo_count, DETACH_THREADS);
 }
