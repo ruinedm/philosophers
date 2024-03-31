@@ -48,7 +48,6 @@ void print_eating(t_philo *philo)
 	t_program *program;
 
 	program = philo->program;
-	philo->last_eat = get_timestamp(program);
 	pthread_mutex_lock(&program->print_lock);
 	philo->last_eat = get_timestamp(program);
 	printf("%ld %d is eating\n", get_timestamp(program), philo->philo_index + 1);
