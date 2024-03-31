@@ -9,7 +9,7 @@ static void *philo_routine(void *void_philo)
 	philo = (t_philo *)void_philo;
 	program = philo->program;
 	if(philo->philo_index % 2 == 0)
-		ft_usleep(100);
+		ft_usleep(program->time_to_eat / 2);
 	while(TRUE)
 	{
 		pthread_mutex_lock(&philo->right_fork->fork);
@@ -54,7 +54,6 @@ void set_iter(t_philo **philos_arr, int arr_size, int mode)
 		while(i < arr_size)
 		{
 			pthread_detach((*philos_arr)[i].philo_id);
-			// pthread_DETACH((*philos_arr)[i].philo_id, NULL);
 			i++;
 		}
 	}
