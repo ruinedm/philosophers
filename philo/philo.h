@@ -15,9 +15,16 @@ typedef struct s_philo t_philo;
 typedef struct s_program t_program;
 
 
+typedef struct s_fork
+{
+	int is_locked;
+	pthread_mutex_t fork;
+} t_fork;
+
 struct s_program
 {
 	pthread_mutex_t print_lock;
+	pthread_mutex_t update_lock;
 	int is_locked;
 	int philo_count;
 	int time_to_die;
@@ -36,9 +43,10 @@ struct s_philo
 	t_program *program;
 	pthread_t philo_id;
 	int	philo_index;
-	t_bool has_already_eaten;
-	pthread_mutex_t *right_fork;
-	pthread_mutex_t *left_fork;
+	int last_eat;
+	int eat_count;
+	t_fork *right_fork;
+	t_fork *left_fork;
 };
 
 enum e_ERROR_MODES
@@ -56,12 +64,12 @@ enum e_BOOLEAN
 enum e_ITER_MODES
 {
 	CREATE_THREADS,
-	JOIN_THREADS,
+	DETACH_THREADS,
 	LINK_FORKS,
 	DESTROY_FORKS
 };
 
-
+void set_iter(t_philo **philos_arr, int arr_size, int mode);
 
 // GENERAL UTLS
 void error_handler(int mode);
@@ -75,4 +83,13 @@ void init_philo(t_program *program);
 time_t get_time(void);
 time_t get_timestamp(t_program *program);
 int	ft_usleep(size_t milliseconds);
+
+
+// PRINTING UTILS
+void print_thinking(t_philo *philo);
+void print_eating(t_philo *philo);
+void print_sleeping(t_philo *philo);
+void print_took_fork(t_philo *philo);
+
+
 #endif

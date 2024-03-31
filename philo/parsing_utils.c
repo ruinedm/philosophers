@@ -57,7 +57,8 @@ void parse_and_check(int ac, char **av, t_program *original)
 	original->is_first_run = TRUE;
 	original->number_of_eat = -1;
 	original->start_timestamp = get_time();
-	original->is_locked = TRUE;
+	original->is_locked = FALSE;
+	original->dead_flag = FALSE;
 	if(ac == 6)
 	{
 		original->is_limited = TRUE;
