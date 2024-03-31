@@ -1,10 +1,10 @@
 CC = cc
-FLAGS = -Wall -Wextra -Werror -pthread
+FLAGS = -Wall -Wextra -Werror
 
-NAME = philo
-SRC = philo.c  parsing_utils.c conversion_utils.c handle_philos.c time_utils.c printing_utils.c
+NAME = philo_bonus
+SRC = philo_bonus.c conversion_utils.c parsing_utils.c time_utils.c printing_utils.c
 OBJ = $(SRC:.c=.o)
-HEADER = philo.h
+HEADER = philo_bonus.h
 
 all: $(NAME)
 

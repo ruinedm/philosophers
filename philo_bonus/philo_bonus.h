@@ -1,13 +1,12 @@
-#ifndef PHILO_H
-#define PHILO_H
+#ifndef PHILO_BONUS_H
+#define PHILO_BONUS_H
 
 #include <stdlib.h>
 #include <stdio.h>
-#include <pthread.h>
 #include <unistd.h>
 #include <limits.h>
 #include <sys/time.h>
-
+#include <semaphore.h>
 
 typedef int t_bool;
 typedef struct s_philo t_philo;
@@ -15,14 +14,13 @@ typedef struct s_program t_program;
 
 struct s_program
 {
-	pthread_mutex_t print_lock;
-	pthread_mutex_t count_lock;
+
 	int is_locked;
 	int philo_count;
 	int time_to_die;
 	int time_to_eat;
 	int time_to_sleep;
-	time_t start_timestamp;
+	long start_timestamp;
 	t_bool is_limited;
 	int number_of_eat;
 	int eat_count;
@@ -34,11 +32,9 @@ struct s_program
 struct s_philo
 {
 	t_program *program;
-	pthread_t philo_id;
+	int philo_id; // TO CHANGE
 	int	philo_index;
 	int last_eat;
-	pthread_mutex_t *right_fork;
-	pthread_mutex_t *left_fork;
 };
 
 
@@ -86,6 +82,7 @@ void print_eating(t_philo *philo);
 void print_sleeping(t_philo *philo);
 void print_took_fork(t_philo *philo);
 void print_error(char *str);
+
 
 
 #endif
