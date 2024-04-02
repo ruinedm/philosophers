@@ -34,13 +34,16 @@ void observer_of_all(t_program *program)
         i = 0;
         while (i < program->philo_count)
         {
+            pthread_mutex_lock(&program->philos_arr[i].last_eat_lock);
             if (get_timestamp(program) - program->philos_arr[i].last_eat > program->time_to_die)
             {
+                pthread_mutex_unlock(&program->philos_arr[i].last_eat_lock);
                 pthread_mutex_lock(&program->print_lock);
                 printf("%ld %d died\n", get_timestamp(program), i + 1);
                 pthread_mutex_unlock(&program->print_lock);
                 return ;
             }
+            pthread_mutex_unlock(&program->philos_arr[i].last_eat_lock);
             if(program->is_limited == TRUE)
             {
                 pthread_mutex_lock(&program->count_lock);

@@ -49,9 +49,11 @@ void print_eating(t_philo *philo)
 
 	program = philo->program;
 	pthread_mutex_lock(&program->print_lock);
-	philo->last_eat = get_timestamp(program);
 	printf("%ld %d is eating\n", get_timestamp(program), philo->philo_index + 1);
 	pthread_mutex_unlock(&program->print_lock);
+	pthread_mutex_lock(&philo->last_eat_lock);
+	philo->last_eat = get_timestamp(program);
+	pthread_mutex_unlock(&philo->last_eat_lock);
 	ft_usleep(program->time_to_eat);
 	if(program->is_limited == TRUE)
 	{

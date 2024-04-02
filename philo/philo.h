@@ -37,6 +37,7 @@ struct s_philo
 	pthread_t philo_id;
 	int	philo_index;
 	int last_eat;
+	pthread_mutex_t last_eat_lock;
 	pthread_mutex_t *right_fork;
 	pthread_mutex_t *left_fork;
 };
