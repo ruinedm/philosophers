@@ -28,7 +28,7 @@ void print_error(char *str)
 	}
 }
 
-void print_thinking(t_philo *philo)
+int print_thinking(t_philo *philo)
 {
 	t_program *program;
 
@@ -37,13 +37,14 @@ void print_thinking(t_philo *philo)
 	if(check_dead(program))
 	{
 		pthread_mutex_unlock(&program->print_lock);
-		return ;
+		return FALSE;
 	}
 	printf("%ld %d is thinking\n", get_timestamp(program), philo->philo_index + 1);
 	pthread_mutex_unlock(&program->print_lock);
+	return TRUE;
 }
 
-void print_sleeping(t_philo *philo)
+int print_sleeping(t_philo *philo)
 {
 	t_program *program;
 
@@ -53,31 +54,49 @@ void print_sleeping(t_philo *philo)
 	if(check_dead(program))
 	{
 		pthread_mutex_unlock(&program->print_lock);
-		return ;
+		return FALSE;
 	}
 	printf("%ld %d is sleeping\n", get_timestamp(program), philo->philo_index + 1);
 	pthread_mutex_unlock(&program->print_lock);
 	ft_usleep(program->time_to_sleep);
+	return TRUE;
 }
 
-void print_took_fork(t_philo *philo)
-{
-	t_program *program;
-
-	program = philo->program;
-	pthread_mutex_lock(&program->print_lock);
-	printf("%ld %d has taken a fork\n", get_timestamp(program), philo->philo_index + 1);
-	pthread_mutex_unlock(&program->print_lock);
-}
-
-void print_eating(t_philo *philo)
+int print_took_fork(t_philo *philo, int mode)
 {
 	t_program *program;
 
 	program = philo->program;
 	pthread_mutex_lock(&program->print_lock);
 	if(check_dead(program))
-			return ;
+	{
+		pthread_mutex_unlock(&program->print_lock);
+		if(mode == LEFT_FORK)
+			pthread_mutex_unlock(philo->right_fork);
+		return FALSE;
+	}
+	if (mode == RIGHT_FORK)
+		pthread_mutex_lock(philo->right_fork);
+	else if(mode == LEFT_FORK)
+		pthread_mutex_lock(philo->left_fork);
+	printf("%ld %d has taken a fork\n", get_timestamp(program), philo->philo_index + 1);
+	pthread_mutex_unlock(&program->print_lock);
+	return TRUE;
+}
+
+int print_eating(t_philo *philo)
+{
+	t_program *program;
+
+	program = philo->program;
+	pthread_mutex_lock(&program->print_lock);
+	if(check_dead(program))
+	{
+		pthread_mutex_unlock(philo->right_fork);
+		pthread_mutex_unlock(philo->left_fork);
+		pthread_mutex_unlock(&program->print_lock);
+		return FALSE;
+	}
 	printf("%ld %d is eating\n", get_timestamp(program), philo->philo_index + 1);
 	pthread_mutex_unlock(&program->print_lock);
 	pthread_mutex_lock(&philo->last_eat_lock);
@@ -90,5 +109,8 @@ void print_eating(t_philo *philo)
 		philo->program->eat_count++;
 		pthread_mutex_unlock(&program->count_lock);
 	}
+	pthread_mutex_unlock(philo->right_fork);
+	pthread_mutex_unlock(philo->left_fork);
+	return TRUE;
 }
 

@@ -68,6 +68,12 @@ enum e_ITER_MODES
 	DESTROY_FORKS
 };
 
+enum e_FORKS
+{
+	RIGHT_FORK,
+	LEFT_FORK
+};
+
 
 // GENERAL UTLS
 void error_handler(t_program *program, int mode);
@@ -84,10 +90,10 @@ time_t get_timestamp(t_program *program);
 int	ft_usleep(size_t milliseconds);
 
 // PRINTING UTILS
-void print_thinking(t_philo *philo);
-void print_eating(t_philo *philo);
-void print_sleeping(t_philo *philo);
-void print_took_fork(t_philo *philo);
+int print_thinking(t_philo *philo);
+int print_eating(t_philo *philo);
+int print_sleeping(t_philo *philo);
+int print_took_fork(t_philo *philo, int mode);
 void print_error(char *str);
 
 
