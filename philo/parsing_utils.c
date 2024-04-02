@@ -65,4 +65,5 @@ void parse_and_check(int ac, char **av, t_program *program)
     	pthread_mutex_init(&program->count_lock, NULL);
 	}
 	pthread_mutex_init(&program->print_lock, NULL);
+	pthread_mutex_init(&program->dead_lock, NULL);
 }

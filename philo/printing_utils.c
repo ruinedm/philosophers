@@ -65,6 +65,8 @@ void print_eating(t_philo *philo)
 	t_program *program;
 
 	program = philo->program;
+	if(check_dead(program))
+			return ;
 	pthread_mutex_lock(&program->print_lock);
 	printf("%ld %d is eating\n", get_timestamp(program), philo->philo_index + 1);
 	pthread_mutex_unlock(&program->print_lock);

@@ -17,6 +17,8 @@ struct s_program
 {
 	pthread_mutex_t print_lock;
 	pthread_mutex_t count_lock;
+	pthread_mutex_t dead_lock;
+	pthread_t observer_id;
 	int is_locked;
 	int philo_count;
 	int time_to_die;
@@ -61,7 +63,7 @@ enum e_BOOLEAN
 enum e_ITER_MODES
 {
 	CREATE_THREADS,
-	DETACH_THREADS,
+	JOIN_THREADS,
 	LINK_FORKS,
 	DESTROY_FORKS
 };
@@ -74,8 +76,8 @@ int	ft_atoi(const char *str);
 void clean_all(t_program *program);
 void set_iter(t_philo **philos_arr, int arr_size, int mode);
 void init_philo(t_program *program);
-
-
+void *observer_of_all(void *void_program);
+int check_dead(t_program *program);
 // TIME UTILS
 time_t get_time(void);
 time_t get_timestamp(t_program *program);

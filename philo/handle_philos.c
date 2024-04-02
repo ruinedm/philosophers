@@ -1,5 +1,18 @@
 #include "philo.h"
 
+
+int check_dead(t_program *program)
+{
+	pthread_mutex_lock(&program->dead_lock);
+	if(program->dead_flag)
+	{
+		pthread_mutex_unlock(&program->dead_lock);
+		return (TRUE);
+	}
+	pthread_mutex_unlock(&program->dead_lock);
+	return (FALSE);
+}
+
 static void *philo_routine(void *void_philo)
 {
 	t_philo *philo;
@@ -11,14 +24,24 @@ static void *philo_routine(void *void_philo)
 		ft_usleep(program->time_to_eat / 2);
 	while(TRUE)
 	{
+		if(check_dead(program))
+			return (NULL);
 		pthread_mutex_lock(philo->right_fork);
 		print_took_fork(philo);
+		if(check_dead(program))
+			return (NULL);
 		pthread_mutex_lock(philo->left_fork);
 		print_took_fork(philo);
 		print_eating(philo);
+		if(check_dead(program))
+			return (NULL);
 		pthread_mutex_unlock(philo->right_fork);
 		pthread_mutex_unlock(philo->left_fork);
+		if(check_dead(program))
+			return (NULL);
 		print_sleeping(philo);
+		if(check_dead(program))
+			return (NULL);
 		print_thinking(philo);
 	}
 	return (NULL);
@@ -34,7 +57,6 @@ void set_iter(t_philo **philos_arr, int arr_size, int mode)
 		while(i < arr_size)
 		{
 			pthread_create(&(*philos_arr)[i].philo_id, NULL, philo_routine, &(*philos_arr)[i]);
-			pthread_detach((*philos_arr)[i].philo_id);
 			i++;
 		}
 	}
@@ -46,6 +68,14 @@ void set_iter(t_philo **philos_arr, int arr_size, int mode)
 				(*philos_arr)[i].left_fork = (*philos_arr)[0].right_fork;
 			else
 				(*philos_arr)[i].left_fork = (*philos_arr)[i + 1].right_fork;
+			i++;
+		}
+	}
+	else if (mode == JOIN_THREADS)
+	{
+		while(i < arr_size)
+		{
+			pthread_join((*philos_arr)[i].philo_id, NULL);
 			i++;
 		}
 	}
@@ -91,4 +121,7 @@ void init_philo(t_program *program)
 	program->philos_arr = philos_arr;
 	set_iter(&program->philos_arr, program->philo_count, LINK_FORKS);
 	set_iter(&program->philos_arr, program->philo_count, CREATE_THREADS);
+	pthread_create(&program->observer_id, NULL, observer_of_all, program);
+	pthread_join(program->observer_id, NULL);
+	set_iter(&program->philos_arr, program->philo_count, JOIN_THREADS);
 }

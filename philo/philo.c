@@ -25,39 +25,7 @@ void error_handler(t_program *program, int mode)
 	exit(EXIT_FAILURE);
 }
 
-void observer_of_all(t_program *program)
-{
-    int i;
 
-    while (TRUE)
-    {
-        i = 0;
-        while (i < program->philo_count)
-        {
-            pthread_mutex_lock(&program->philos_arr[i].last_eat_lock);
-            if (get_timestamp(program) - program->philos_arr[i].last_eat > program->time_to_die)
-            {
-                pthread_mutex_unlock(&program->philos_arr[i].last_eat_lock);
-                pthread_mutex_lock(&program->print_lock);
-                printf("%ld %d died\n", get_timestamp(program), i + 1);
-                //pthread_mutex_unlock(&program->print_lock);
-                return ;
-            }
-            pthread_mutex_unlock(&program->philos_arr[i].last_eat_lock);
-            if(program->is_limited == TRUE)
-            {
-                pthread_mutex_lock(&program->count_lock);
-                if(program->eat_count >= program->philo_count * program->number_of_eat)
-                {
-                    pthread_mutex_lock(&program->print_lock);
-                    return ;
-                }
-                pthread_mutex_unlock(&program->count_lock);
-            }
-            i++;
-        }
-    }
-}
 
 void clean_all(t_program *program)
 {
@@ -73,17 +41,17 @@ void clean_all(t_program *program)
     }
     free(program->philos_arr);
     pthread_mutex_destroy(&program->print_lock);
+    pthread_mutex_destroy(&program->dead_lock);
     if(program->is_limited == TRUE)
         pthread_mutex_destroy(&program->count_lock);
 }
 
 int main(int ac, char **av)
-{
+{ 
     t_program program;
 
     parse_and_check(ac, av, &program);
     init_philo(&program);
-    observer_of_all(&program);
     clean_all(&program);
     return 0;
 }
