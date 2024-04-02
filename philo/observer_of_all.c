@@ -21,7 +21,7 @@ void *observer_of_all(void *void_program)
 				pthread_mutex_lock(&program->dead_lock);
 				program->dead_flag = TRUE;
 				pthread_mutex_unlock(&program->dead_lock);
-                //pthread_mutex_unlock(&program->print_lock);
+                pthread_mutex_unlock(&program->print_lock);
                 return NULL;
             }
             pthread_mutex_unlock(&program->philos_arr[i].last_eat_lock);
@@ -31,10 +31,10 @@ void *observer_of_all(void *void_program)
                 if(program->eat_count >= program->philo_count * program->number_of_eat)
                 {
                     pthread_mutex_lock(&program->print_lock);
-					printf("Reached limit\n");
 					pthread_mutex_lock(&program->dead_lock);
 					program->dead_flag = TRUE;
 					pthread_mutex_unlock(&program->dead_lock);
+					pthread_mutex_unlock(&program->print_lock);
                     return NULL;
                 }
                 pthread_mutex_unlock(&program->count_lock);
