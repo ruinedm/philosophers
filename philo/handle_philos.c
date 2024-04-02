@@ -24,17 +24,28 @@ static void *philo_routine(void *void_philo)
 		ft_usleep(program->time_to_eat / 2);
 	while(TRUE)
 	{
-		if(check_dead(program))
-			return (NULL);
 		pthread_mutex_lock(philo->right_fork);
-		print_took_fork(philo);
 		if(check_dead(program))
+		{
+			pthread_mutex_unlock(philo->right_fork);
 			return (NULL);
+		}
+		print_took_fork(philo);
 		pthread_mutex_lock(philo->left_fork);
+		if(check_dead(program))
+		{
+			pthread_mutex_unlock(philo->right_fork);
+			pthread_mutex_unlock(philo->left_fork);
+			return (NULL);
+		}
 		print_took_fork(philo);
 		print_eating(philo);
 		if(check_dead(program))
+		{
+			pthread_mutex_unlock(philo->right_fork);
+			pthread_mutex_unlock(philo->left_fork);
 			return (NULL);
+		}
 		pthread_mutex_unlock(philo->right_fork);
 		pthread_mutex_unlock(philo->left_fork);
 		if(check_dead(program))
