@@ -71,14 +71,15 @@ int print_took_fork(t_philo *philo, int mode)
 	if(check_dead(program))
 	{
 		pthread_mutex_unlock(&program->print_lock);
-		if(mode == LEFT_FORK)
+		if(mode == RIGHT_FORK)
 			pthread_mutex_unlock(philo->right_fork);
+		else
+		{
+			pthread_mutex_unlock(philo->right_fork);
+			pthread_mutex_unlock(philo->left_fork);
+		}
 		return FALSE;
 	}
-	if (mode == RIGHT_FORK)
-		pthread_mutex_lock(philo->right_fork);
-	else if(mode == LEFT_FORK)
-		pthread_mutex_lock(philo->left_fork);
 	printf("%ld %d has taken a fork\n", get_timestamp(program), philo->philo_index + 1);
 	pthread_mutex_unlock(&program->print_lock);
 	return TRUE;

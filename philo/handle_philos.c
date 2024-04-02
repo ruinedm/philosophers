@@ -24,8 +24,10 @@ static void *philo_routine(void *void_philo)
 		ft_usleep(program->time_to_eat / 2);
 	while(TRUE)
 	{
+		pthread_mutex_lock(philo->right_fork);
 		if(!print_took_fork(philo, RIGHT_FORK))
 			break;
+		pthread_mutex_lock(philo->left_fork);
 		if(!print_took_fork(philo, LEFT_FORK))
 			break;
 		if(!print_eating(philo))

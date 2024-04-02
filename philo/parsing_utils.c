@@ -66,4 +66,6 @@ void parse_and_check(int ac, char **av, t_program *program)
 	}
 	pthread_mutex_init(&program->print_lock, NULL);
 	pthread_mutex_init(&program->dead_lock, NULL);
+	//printf("PRINT LOCK: %p // COUNT LOCK %p // DEAD LOCK %p\n", &program->print_lock, &program->count_lock, &program->dead_lock);
 }
+// 0x7ffc0a363f20
