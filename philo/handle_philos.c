@@ -83,7 +83,7 @@ void init_philo(t_program *program)
 		if(philos_arr[i].right_fork == NULL)
 			return (free_forks_on_error(program,philos_arr, i), error_handler(program, MALLOC_ERROR));
 		philos_arr[i].left_fork = NULL;
-		philos_arr[i].last_eat = get_timestamp(program);
+		philos_arr[i].last_eat = 0;
 		pthread_mutex_init(&philos_arr[i].last_eat_lock, NULL);
 		pthread_mutex_init(philos_arr[i].right_fork, NULL);
 		i++;

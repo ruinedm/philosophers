@@ -40,7 +40,7 @@ void observer_of_all(t_program *program)
                 pthread_mutex_unlock(&program->philos_arr[i].last_eat_lock);
                 pthread_mutex_lock(&program->print_lock);
                 printf("%ld %d died\n", get_timestamp(program), i + 1);
-                pthread_mutex_unlock(&program->print_lock);
+                //pthread_mutex_unlock(&program->print_lock);
                 return ;
             }
             pthread_mutex_unlock(&program->philos_arr[i].last_eat_lock);
@@ -66,6 +66,7 @@ void clean_all(t_program *program)
     i = 0;
     while (i < program->philo_count)
     {
+        pthread_mutex_destroy(&program->philos_arr[i].last_eat_lock);
         pthread_mutex_destroy(program->philos_arr[i].right_fork);
         free(program->philos_arr[i].right_fork);
         i++;

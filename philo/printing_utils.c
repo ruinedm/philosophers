@@ -1,5 +1,21 @@
 #include "philo.h"
 
+
+// int check_dead(t_philo *philo)
+// {
+// 	t_program *program;
+
+// 	program = philo->program;
+// 	pthread_mutex_lock(&program->dead_lock);
+// 	if(program->dead_flag)
+// 	{
+// 		pthread_mutex_unlock(&program->dead_lock);
+// 		return (TRUE);
+// 	}
+// 	pthread_mutex_unlock(&program->dead_lock);
+// 	return (FALSE);
+// }
+
 void print_error(char *str)
 {
 	int i;
@@ -27,6 +43,7 @@ void print_sleeping(t_philo *philo)
 	t_program *program;
 
 	program = philo->program;
+
 	pthread_mutex_lock(&program->print_lock);
 	printf("%ld %d is sleeping\n", get_timestamp(program), philo->philo_index + 1);
 	pthread_mutex_unlock(&program->print_lock);
