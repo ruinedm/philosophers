@@ -52,6 +52,10 @@ enum e_ERROR_MODES
 	INPUT_ERROR,
 	TIME_ERROR,
 	MALLOC_ERROR,
+	CREATE_THREAD_ERROR,
+	JOIN_THREAD_ERROR,
+	MUTEX_INIT_ERROR
+	
 };
 
 enum e_BOOLEAN
@@ -74,14 +78,19 @@ enum e_FORKS
 	LEFT_FORK
 };
 
+enum e_CLEAN_MODES
+{
+	CLEAN_ALL,
+	CLEAN_PROGRAM
+};
+
 
 // GENERAL UTLS
 void error_handler(t_program *program, int mode);
-void parse_and_check(int ac, char **av, t_program *original);
+int parse_and_check(int ac, char **av, t_program *original);
 int	ft_atoi(const char *str);
-void clean_all(t_program *program);
-void set_iter(t_philo **philos_arr, int arr_size, int mode);
-void init_philo(t_program *program);
+void clean_all(t_program *program, int mode);
+int init_philo(t_program *program);
 void *observer_of_all(void *void_program);
 int check_dead(t_program *program);
 // TIME UTILS

@@ -74,22 +74,23 @@ void set_iter(t_philo **philos_arr, int arr_size, int mode)
 	}
 }
 
-static void free_forks_on_error(t_program *program, t_philo *philos_arr, int current)
+static void clean_on_error(t_program *program, t_philo *philos_arr, int current)
 {
 	int i;
 
 	i = 0;
 	while(i < current)
 	{
+		pthread_mutex_destroy(&philos_arr[i].last_eat_lock);
 		pthread_mutex_destroy(philos_arr[i].right_fork);
 		free(philos_arr[i].right_fork);
 		i++;
 	}
 	free(philos_arr);
-	pthread_mutex_destroy(&program->print_lock);
+	clean_all(program, CLEAN_PROGRAM);
 }
 
-void init_philo(t_program *program)
+int init_philo(t_program *program)
 {
 	t_philo *philos_arr;
 	int i;
@@ -97,18 +98,20 @@ void init_philo(t_program *program)
 	i = 0;
 	philos_arr = malloc(sizeof(t_philo) * program->philo_count);
 	if(philos_arr == NULL)
-		error_handler(program, MALLOC_ERROR);
+		return (error_handler(program, MALLOC_ERROR), clean_all(program, CLEAN_PROGRAM),FALSE);
 	while (i < program->philo_count)
 	{
 		philos_arr[i].program = program;
 		philos_arr[i].philo_index = i;
 		philos_arr[i].right_fork = malloc(sizeof(pthread_mutex_t));
 		if(philos_arr[i].right_fork == NULL)
-			return (free_forks_on_error(program,philos_arr, i), error_handler(program, MALLOC_ERROR));
+			return (clean_on_error(program,philos_arr, i), error_handler(program, MALLOC_ERROR),clean_all(program, CLEAN_PROGRAM), FALSE);
 		philos_arr[i].left_fork = NULL;
 		philos_arr[i].last_eat = 0;
-		pthread_mutex_init(&philos_arr[i].last_eat_lock, NULL);
-		pthread_mutex_init(philos_arr[i].right_fork, NULL);
+		if(pthread_mutex_init(&philos_arr[i].last_eat_lock, NULL))
+			return (clean_on_error(program,philos_arr, i), error_handler(program, MALLOC_ERROR),clean_all(program, CLEAN_PROGRAM), FALSE);
+		if(pthread_mutex_init(philos_arr[i].right_fork, NULL))
+			return (clean_on_error(program,philos_arr, i), error_handler(program, MALLOC_ERROR),clean_all(program, CLEAN_PROGRAM), FALSE);
 		i++;
 	}
 	program->philos_arr = philos_arr;
@@ -117,4 +120,5 @@ void init_philo(t_program *program)
 	pthread_create(&program->observer_id, NULL, observer_of_all, program);
 	pthread_join(program->observer_id, NULL);
 	set_iter(&program->philos_arr, program->philo_count, JOIN_THREADS);
+	return (TRUE);
 }

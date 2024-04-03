@@ -41,10 +41,10 @@ t_bool is_valid_av(int ac,char **av)
 	return (TRUE);
 }
 
-void parse_and_check(int ac, char **av, t_program *program)
+int parse_and_check(int ac, char **av, t_program *program)
 {
 	if((ac != 5 && ac != 6) || !is_valid_av(ac, av))
-		error_handler(NULL, INPUT_ERROR);
+		return (error_handler(NULL, INPUT_ERROR), FALSE);
 	program->philo_count = ft_atoi(av[1]);
 	program->time_to_die = ft_atoi(av[2]);
 	program->time_to_eat = ft_atoi(av[3]);
@@ -55,7 +55,7 @@ void parse_and_check(int ac, char **av, t_program *program)
 	program->eat_count = 0;
 	program->start_timestamp = get_time();
 	if(program->start_timestamp == 0)
-		error_handler(NULL, TIME_ERROR);
+		return (error_handler(NULL, TIME_ERROR), FALSE);
 	program->is_locked = FALSE;
 	program->dead_flag = FALSE;
 	if(ac == 6)
@@ -64,8 +64,9 @@ void parse_and_check(int ac, char **av, t_program *program)
 		program->number_of_eat = ft_atoi(av[5]);
     	pthread_mutex_init(&program->count_lock, NULL);
 	}
-	pthread_mutex_init(&program->print_lock, NULL);
-	pthread_mutex_init(&program->dead_lock, NULL);
-	//printf("PRINT LOCK: %p // COUNT LOCK %p // DEAD LOCK %p\n", &program->print_lock, &program->count_lock, &program->dead_lock);
+	if(pthread_mutex_init(&program->print_lock, NULL))
+		return (error_handler(program, MUTEX_INIT_ERROR), FALSE);
+	if(pthread_mutex_init(&program->dead_lock, NULL))
+		return (pthread_mutex_destroy(&program->print_lock),error_handler(program, MUTEX_INIT_ERROR), FALSE);
+	return (TRUE);
 }
-// 0x7ffc0a363f20
