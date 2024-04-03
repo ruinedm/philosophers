@@ -11,11 +11,7 @@ time_t get_time(void)
 
 time_t get_timestamp(t_program *program)
 {
-	time_t time;
-	time = get_time();
-	if(time == 0)
-		error_handler(program, TIME_ERROR);
-	return (time - program->start_timestamp);
+	return (get_time() - program->start_timestamp);
 }
 
 int	ft_usleep(size_t milliseconds)

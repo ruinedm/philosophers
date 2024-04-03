@@ -18,6 +18,7 @@ struct s_program
 	pthread_mutex_t print_lock;
 	pthread_mutex_t count_lock;
 	pthread_mutex_t dead_lock;
+	pthread_mutex_t start_lock;
 	pthread_t observer_id;
 	int is_locked;
 	int philo_count;
@@ -29,7 +30,6 @@ struct s_program
 	int number_of_eat;
 	int eat_count;
 	int dead_flag;
-	t_bool is_first_run;
 	t_philo *philos_arr;
 };
 
@@ -44,9 +44,6 @@ struct s_philo
 	pthread_mutex_t *left_fork;
 };
 
-
-#define TIME_NOT_INITALIZED -1
-
 enum e_ERROR_MODES
 {
 	INPUT_ERROR,
@@ -55,7 +52,6 @@ enum e_ERROR_MODES
 	CREATE_THREAD_ERROR,
 	JOIN_THREAD_ERROR,
 	MUTEX_INIT_ERROR
-	
 };
 
 enum e_BOOLEAN
@@ -93,6 +89,10 @@ void clean_all(t_program *program, int mode);
 int init_philo(t_program *program);
 void *observer_of_all(void *void_program);
 int check_dead(t_program *program);
+void clean_on_error(t_program *program, t_philo *philos_arr, int current);
+void *philo_routine(void *void_philo);
+void set_as_dead(t_program *program);
+
 // TIME UTILS
 time_t get_time(void);
 time_t get_timestamp(t_program *program);

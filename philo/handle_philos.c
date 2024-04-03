@@ -1,93 +1,66 @@
 #include "philo.h"
 
-
-int check_dead(t_program *program)
+int create_threads(t_program *program) 
 {
-	pthread_mutex_lock(&program->dead_lock);
-	if(program->dead_flag)
+    int i = 0;
+    int arr_size = program->philo_count;
+    t_philo **philos_arr = &(program->philos_arr);
+
+    while (i < arr_size) 
 	{
-		pthread_mutex_unlock(&program->dead_lock);
-		return (TRUE);
-	}
-	pthread_mutex_unlock(&program->dead_lock);
-	return (FALSE);
+        if(pthread_create(&(*philos_arr)[i].philo_id, NULL, philo_routine, &(*philos_arr)[i]))
+			return (set_as_dead(program), error_handler(program, CREATE_THREAD_ERROR), clean_all(program, CLEAN_ALL), FALSE);
+        i++;
+    }
+    if(pthread_create(&program->observer_id, NULL, observer_of_all, program))
+		return (set_as_dead(program), error_handler(program, CREATE_THREAD_ERROR), clean_all(program, CLEAN_ALL), FALSE);
+	return (TRUE);
 }
 
-static void *philo_routine(void *void_philo)
-{
-	t_philo *philo;
-	t_program *program;
+void link_forks(t_program *program)
+ {
+    int i = 0;
+    int arr_size = program->philo_count;
+    t_philo **philos_arr = &(program->philos_arr);
 
-	philo = (t_philo *)void_philo;
-	program = philo->program;
-	if(philo->philo_index % 2 == 0)
-		ft_usleep(program->time_to_eat / 2);
-	while(TRUE)
+    while (i < arr_size) 
 	{
-		pthread_mutex_lock(philo->right_fork);
-		if(!print_took_fork(philo, RIGHT_FORK))
-			break;
-		pthread_mutex_lock(philo->left_fork);
-		if(!print_took_fork(philo, LEFT_FORK))
-			break;
-		if(!print_eating(philo))
-			break;
-		if(!print_sleeping(philo))
-			break;
-		if(!print_thinking(philo))
-			break;
-	}
-	return (NULL);
+        if (i == arr_size - 1 && i != 0)
+            (*philos_arr)[i].left_fork = (*philos_arr)[0].right_fork;
+        else if (i != arr_size)
+            (*philos_arr)[i].left_fork = (*philos_arr)[i + 1].right_fork;
+        i++;
+    }
 }
 
-void set_iter(t_philo **philos_arr, int arr_size, int mode)
+int join_threads(t_program *program) 
 {
-	int i;
+    int i = 0;
+    int arr_size = program->philo_count;
+    t_philo **philos_arr = &(program->philos_arr);
 
-	i = 0;
-	if(mode == CREATE_THREADS)
-	{
-		while(i < arr_size)
-		{
-			pthread_create(&(*philos_arr)[i].philo_id, NULL, philo_routine, &(*philos_arr)[i]);
-			i++;
-		}
-	}
-	else if(mode == LINK_FORKS)
-	{
-		while(i < arr_size)
-		{
-			if(i == arr_size - 1)
-				(*philos_arr)[i].left_fork = (*philos_arr)[0].right_fork;
-			else
-				(*philos_arr)[i].left_fork = (*philos_arr)[i + 1].right_fork;
-			i++;
-		}
-	}
-	else if (mode == JOIN_THREADS)
-	{
-		while(i < arr_size)
-		{
-			pthread_join((*philos_arr)[i].philo_id, NULL);
-			i++;
-		}
-	}
+    while (i < arr_size)
+	 {
+        if(pthread_join((*philos_arr)[i].philo_id, NULL))
+			return (set_as_dead(program), error_handler(program, CREATE_THREAD_ERROR), clean_all(program, CLEAN_ALL), FALSE);
+        i++;
+    }
+    if(pthread_join(program->observer_id, NULL))
+		return (set_as_dead(program), error_handler(program, CREATE_THREAD_ERROR), clean_all(program, CLEAN_ALL), FALSE);
+	return (TRUE);
 }
 
-static void clean_on_error(t_program *program, t_philo *philos_arr, int current)
-{
-	int i;
 
-	i = 0;
-	while(i < current)
-	{
-		pthread_mutex_destroy(&philos_arr[i].last_eat_lock);
-		pthread_mutex_destroy(philos_arr[i].right_fork);
-		free(philos_arr[i].right_fork);
-		i++;
-	}
-	free(philos_arr);
-	clean_all(program, CLEAN_PROGRAM);
+int start_the_simulation(t_program *prgoram)
+{
+	pthread_mutex_lock(&prgoram->start_lock);
+	link_forks(prgoram);
+	if(!create_threads(prgoram))
+		return (FALSE);
+	pthread_mutex_unlock(&prgoram->start_lock);
+	if(!join_threads(prgoram))
+		return (FALSE);
+	return (TRUE);
 }
 
 int init_philo(t_program *program)
@@ -107,7 +80,7 @@ int init_philo(t_program *program)
 		if(philos_arr[i].right_fork == NULL)
 			return (clean_on_error(program,philos_arr, i), error_handler(program, MALLOC_ERROR),clean_all(program, CLEAN_PROGRAM), FALSE);
 		philos_arr[i].left_fork = NULL;
-		philos_arr[i].last_eat = 0;
+		philos_arr[i].last_eat = get_timestamp(program);
 		if(pthread_mutex_init(&philos_arr[i].last_eat_lock, NULL))
 			return (clean_on_error(program,philos_arr, i), error_handler(program, MALLOC_ERROR),clean_all(program, CLEAN_PROGRAM), FALSE);
 		if(pthread_mutex_init(philos_arr[i].right_fork, NULL))
@@ -115,10 +88,5 @@ int init_philo(t_program *program)
 		i++;
 	}
 	program->philos_arr = philos_arr;
-	set_iter(&program->philos_arr, program->philo_count, LINK_FORKS);
-	set_iter(&program->philos_arr, program->philo_count, CREATE_THREADS);
-	pthread_create(&program->observer_id, NULL, observer_of_all, program);
-	pthread_join(program->observer_id, NULL);
-	set_iter(&program->philos_arr, program->philo_count, JOIN_THREADS);
-	return (TRUE);
+	return (start_the_simulation(program));
 }

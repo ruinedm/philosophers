@@ -1,21 +1,5 @@
 #include "philo.h"
 
-
-// int check_dead(t_philo *philo)
-// {
-// 	t_program *program;
-
-// 	program = philo->program;
-// 	pthread_mutex_lock(&program->dead_lock);
-// 	if(program->dead_flag)
-// 	{
-// 		pthread_mutex_unlock(&program->dead_lock);
-// 		return (TRUE);
-// 	}
-// 	pthread_mutex_unlock(&program->dead_lock);
-// 	return (FALSE);
-// }
-
 void print_error(char *str)
 {
 	int i;
@@ -82,6 +66,8 @@ int print_took_fork(t_philo *philo, int mode)
 	}
 	printf("%ld %d has taken a fork\n", get_timestamp(program), philo->philo_index + 1);
 	pthread_mutex_unlock(&program->print_lock);
+	if(philo->program->philo_count == 1 && !philo->left_fork)
+		return (FALSE);
 	return TRUE;
 }
 
@@ -110,8 +96,6 @@ int print_eating(t_philo *philo)
 		philo->program->eat_count++;
 		pthread_mutex_unlock(&program->count_lock);
 	}
-	pthread_mutex_unlock(philo->right_fork);
-	pthread_mutex_unlock(philo->left_fork);
-	return TRUE;
+	return (pthread_mutex_unlock(philo->right_fork), pthread_mutex_unlock(philo->left_fork), TRUE);
 }
 
