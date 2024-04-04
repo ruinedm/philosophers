@@ -82,7 +82,7 @@ enum e_CLEAN_MODES
 
 
 // GENERAL UTLS
-void error_handler(t_program *program, int mode);
+void error_handler(int mode);
 int parse_and_check(int ac, char **av, t_program *original);
 int	ft_atoi(const char *str);
 void clean_all(t_program *program, int mode);

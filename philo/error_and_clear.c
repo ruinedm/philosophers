@@ -53,7 +53,7 @@ void clean_on_error(t_program *program, t_philo *philos_arr, int current)
 	free(philos_arr);
 	clean_all(program, CLEAN_PROGRAM);
 }
-void error_handler(t_program *program, int mode)
+void error_handler(int mode)
 {
 	if (mode == INPUT_ERROR)
 		print_error("Error: Invalid input!\n");
