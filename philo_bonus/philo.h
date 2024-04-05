@@ -20,6 +20,8 @@ struct s_program
 {
 	char *semaphore;
 	sem_t *forks;
+	sem_t *print_sem;
+	sem_t *start_sem;
 	int is_locked;
 	int philo_count;
 	int time_to_die;
@@ -31,7 +33,6 @@ struct s_program
 	int eat_count;
 	int dead_flag;
 	t_philo *philos_arr;
-	pthread_mutex_t wait_mutex;
 };
 
 struct s_philo

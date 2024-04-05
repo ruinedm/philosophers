@@ -36,24 +36,35 @@ void philo_routine(t_philo *philo)
     }
     pthread_create(&philo->philo_observer, NULL, philo_observer_routine, (void *)philo);
     pthread_detach(philo->philo_observer);
-    if(philo->philo_index > philo->program->philo_count / 2)
-        ft_usleep(200);
+    // if(philo->philo_index > philo->program->philo_count / 2)
+    //     ft_usleep(program->time_to_die / 2);
     while (TRUE)
     {
         sem_wait(program->forks);
+        sem_wait(program->print_sem);
         printf("%ld %i has taken a fork\n", get_timestamp(program), philo->philo_index + 1);
+        sem_post(program->print_sem);
         sem_wait(program->forks);
+        sem_wait(program->print_sem);
         printf("%ld %i has taken a fork\n", get_timestamp(program), philo->philo_index + 1);
-        printf("%ld %i is eating\n", get_timestamp(program), philo->philo_index + 1);
+        sem_post(program->print_sem);
         sem_wait(philo->last_eat_sem);
         philo->last_eat = get_timestamp(program);
         sem_post(philo->last_eat_sem);
+        sem_wait(program->print_sem);
+        printf("%ld %i is eating\n", get_timestamp(program), philo->philo_index + 1);
+        sem_post(program->print_sem);
         ft_usleep(program->time_to_eat);
         sem_post(program->forks);
         sem_post(program->forks);
+        sem_wait(program->print_sem);
         printf("%ld %d is sleeping\n", get_timestamp(program), philo->philo_index + 1);
+        sem_post(program->print_sem);
         ft_usleep(program->time_to_sleep);
+        sem_wait(program->print_sem);
         printf("%ld %i is thinking\n", get_timestamp(program), philo->philo_index + 1);
+        sem_post(program->print_sem);
+
     }
     exit(EXIT_SUCCESS);
 }
@@ -85,7 +96,9 @@ void observe_philos(t_program *program)
             {
                 if (WIFEXITED(status) && WEXITSTATUS(status) == DEAD_PHILO)
                 {
+                    sem_wait(program->print_sem);
                     printf("%ld %i has died\n", get_timestamp(program), i + 1);
+                    sem_post(program->print_sem);
                     kill_all(program, i);
                     exit(EXIT_SUCCESS);
                 }
@@ -105,6 +118,8 @@ void init_philo(t_program *program)
         error_handler(MALLOC_ERROR);
     sem_unlink("/fork_semaphore");
     program->forks = sem_open("/fork_semaphore", O_CREAT | O_EXCL, 0644, program->philo_count);
+    sem_unlink("/print_sem");
+    program->print_sem = sem_open("/print_sem", O_CREAT | O_EXCL, 0644, 1);
     if(program->forks == SEM_FAILED)
     {
         perror("sem_open");
@@ -115,7 +130,7 @@ void init_philo(t_program *program)
         program->philos_arr[i].philo_index = i;
         program->philos_arr[i].philo_id = fork();
         program->philos_arr[i].program = program;
-        program->philos_arr[i].last_eat = get_timestamp(program);
+        program->philos_arr[i].last_eat = 0;
         if(!program->philos_arr[i].philo_id)
             philo_routine(&program->philos_arr[i]);
         i++;
