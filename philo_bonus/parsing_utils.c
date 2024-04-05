@@ -55,7 +55,7 @@ int parse_and_check(int ac, char **av, t_program *program)
         return (error_handler(INPUT_ERROR), FALSE);
     program->is_limited = FALSE;
     program->number_of_eat = -1;
-    program->eat_count = 0;
+    program->philos_done_eating = 0;
     program->start_timestamp = get_time();
     if(program->start_timestamp == 0)
         return (error_handler(TIME_ERROR), FALSE);

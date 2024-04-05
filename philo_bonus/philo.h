@@ -15,7 +15,7 @@
 typedef int t_bool;
 typedef struct s_philo t_philo;
 typedef struct s_program t_program;
-# define DEAD_PHILO 2
+
 struct s_program
 {
 	char *semaphore;
@@ -30,7 +30,7 @@ struct s_program
 	time_t start_timestamp;
 	t_bool is_limited;
 	int number_of_eat;
-	int eat_count;
+	int philos_done_eating;
 	int dead_flag;
 	t_philo *philos_arr;
 };
@@ -42,9 +42,11 @@ struct s_philo
 	pid_t philo_id;
 	int	philo_index;
 	int last_eat;
+	int eat_count;
 	sem_t *last_eat_sem;
+	sem_t *eaten_enough_sem;
 };
-#define UNINITIALIZED_ID -15
+
 enum e_ERROR_MODES
 {
 	INPUT_ERROR,
@@ -79,6 +81,13 @@ enum e_CLEAN_MODES
 {
 	CLEAN_ALL,
 	CLEAN_PROGRAM
+};
+
+
+enum EXIT_STATUS
+{
+	DEAD_PHILO=2,
+	EATEN_ENOUGH
 };
 
 
