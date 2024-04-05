@@ -68,9 +68,6 @@ int parse_and_check(int ac, char **av, t_program *program)
         if(!program->number_of_eat)
             return (error_handler(INPUT_ERROR), FALSE);
     }
-	program->philos_arr = malloc(sizeof(t_philo) * program->philo_count);
-    if (!program->philos_arr)
-        error_handler(MALLOC_ERROR);
-	program->semaphore = "/my_semaphore";
+
     return (TRUE);
 }

@@ -10,12 +10,12 @@
 #include <sys/time.h>
 #include <sys/wait.h>
 #include <fcntl.h>
-
+#include <signal.h>
 
 typedef int t_bool;
 typedef struct s_philo t_philo;
 typedef struct s_program t_program;
-
+# define DEAD_PHILO 2
 struct s_program
 {
 	char *semaphore;
@@ -36,6 +36,7 @@ struct s_program
 
 struct s_philo
 {
+	pthread_t philo_observer;
 	t_program *program;
 	pid_t philo_id;
 	int	philo_index;
