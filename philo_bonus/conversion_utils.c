@@ -1,4 +1,4 @@
-#include "philo_bonus.h"
+#include "philo.h"
 
 static int	str_to_int(const char *str, int i, int sign)
 {
