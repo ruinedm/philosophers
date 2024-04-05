@@ -11,19 +11,33 @@ void *philo_observer_routine(void *void_philo)
     ft_usleep(2);
     while (TRUE)
     {
+        sem_wait(philo->last_eat_sem);
         if(get_timestamp(program) - philo->last_eat > program->time_to_die)
             exit(DEAD_PHILO);
+        sem_post(philo->last_eat_sem);
+        
     }
     return (NULL);
 }
 
 void philo_routine(t_philo *philo)
 {
+    char *last_eat_str_sem;
     t_program *program;
 
     program = philo->program;
+    last_eat_str_sem = ft_strjoin("/last_eat_", ft_itoa(philo->philo_index));
+    sem_unlink(last_eat_str_sem);
+    philo->last_eat_sem = sem_open(last_eat_str_sem, O_CREAT | O_EXCL, 0644, 1);
+    if(philo->last_eat_sem == SEM_FAILED)
+    {
+        perror("sem_open");
+        exit(EXIT_FAILURE);
+    }
     pthread_create(&philo->philo_observer, NULL, philo_observer_routine, (void *)philo);
     pthread_detach(philo->philo_observer);
+    if(philo->philo_index > philo->program->philo_count / 2)
+        ft_usleep(200);
     while (TRUE)
     {
         sem_wait(program->forks);
@@ -31,7 +45,9 @@ void philo_routine(t_philo *philo)
         sem_wait(program->forks);
         printf("%ld %i has taken a fork\n", get_timestamp(program), philo->philo_index + 1);
         printf("%ld %i is eating\n", get_timestamp(program), philo->philo_index + 1);
+        sem_wait(philo->last_eat_sem);
         philo->last_eat = get_timestamp(program);
+        sem_post(philo->last_eat_sem);
         ft_usleep(program->time_to_eat);
         sem_post(program->forks);
         sem_post(program->forks);
@@ -69,7 +85,7 @@ void observe_philos(t_program *program)
             {
                 if (WIFEXITED(status) && WEXITSTATUS(status) == DEAD_PHILO)
                 {
-                    printf("%ld %i has died\n", get_timestamp(program), i);
+                    printf("%ld %i has died\n", get_timestamp(program), i + 1);
                     kill_all(program, i);
                     exit(EXIT_SUCCESS);
                 }

@@ -41,7 +41,7 @@ struct s_philo
 	pid_t philo_id;
 	int	philo_index;
 	int last_eat;
-	pthread_mutex_t last_eat_lock;
+	sem_t *last_eat_sem;
 };
 #define UNINITIALIZED_ID -15
 enum e_ERROR_MODES
@@ -91,7 +91,8 @@ void *observer_of_all(void *void_program);
 int check_dead(t_program *program);
 void clean_on_error(t_program *program, t_philo *philos_arr, int current);
 void set_as_dead(t_program *program);
-
+char	*ft_strjoin(const char *s1, const char *s2);
+char	*ft_itoa(int n);
 // TIME UTILS
 time_t get_time(void);
 time_t get_timestamp(t_program *program);

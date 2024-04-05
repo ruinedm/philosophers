@@ -68,6 +68,5 @@ int parse_and_check(int ac, char **av, t_program *program)
         if(!program->number_of_eat)
             return (error_handler(INPUT_ERROR), FALSE);
     }
-
     return (TRUE);
 }
