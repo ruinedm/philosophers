@@ -114,8 +114,7 @@ void observe_philos(t_program *program)
         i = 0;
         while (i < program->philo_count)
         {
-            status = 0;
-            if (waitpid(program->philos_arr[i].philo_id, &status, WNOHANG) != -1)
+            if (waitpid(program->philos_arr[i].philo_id, &status, WNOHANG) > 0)
             {
                 if (WIFEXITED(status))
                 {
