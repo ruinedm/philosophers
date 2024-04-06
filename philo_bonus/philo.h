@@ -44,6 +44,7 @@ struct s_philo
 	int last_eat;
 	int eat_count;
 	sem_t *last_eat_sem;
+	int already;
 	sem_t *eaten_enough_sem;
 };
 

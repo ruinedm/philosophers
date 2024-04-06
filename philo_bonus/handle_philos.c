@@ -114,6 +114,7 @@ void observe_philos(t_program *program)
         i = 0;
         while (i < program->philo_count)
         {
+            status = 0;
             if (waitpid(program->philos_arr[i].philo_id, &status, WNOHANG) != -1)
             {
                 if (WIFEXITED(status))
@@ -130,10 +131,7 @@ void observe_philos(t_program *program)
                 }
             }
             if(program->philos_done_eating == program->philo_count)
-            {
-                while(wait(NULL) != -1);
                 exit(EXIT_SUCCESS);
-            }
             i++;
         }
     }
@@ -163,6 +161,8 @@ void init_philo(t_program *program)
         program->philos_arr[i].philo_id = fork();
         program->philos_arr[i].program = program;
         program->philos_arr[i].last_eat = 0;
+        program->philos_arr[i].already = 0;
+
         if(!program->philos_arr[i].philo_id)
             philo_routine(&program->philos_arr[i]);
         i++;
