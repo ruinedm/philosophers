@@ -22,7 +22,6 @@ void *philo_observer_routine(void *void_philo)
             {
                 sem_post(program->forks);
                 sem_post(program->forks);
-                sem_post(program->print_sem);
                 exit(EATEN_ENOUGH);
             }
             sem_post(philo->eaten_enough_sem);
@@ -120,9 +119,8 @@ void observe_philos(t_program *program)
                 {
                     if(WEXITSTATUS(status) == DEAD_PHILO)
                     {
-                        sem_wait(program->print_sem);
-                        printf("%ld %i has died\n", get_timestamp(program), i + 1);
                         kill_all(program, i);
+                        printf("%ld %i has died\n", get_timestamp(program), i + 1);
                         exit(EXIT_SUCCESS);
                     }
                     else if (WEXITSTATUS(status) == EATEN_ENOUGH)
