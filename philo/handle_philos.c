@@ -51,14 +51,16 @@ int join_threads(t_program *program)
 }
 
 
-int start_the_simulation(t_program *prgoram)
+int start_the_simulation(t_program *program)
 {
-	pthread_mutex_lock(&prgoram->start_lock);
-	link_forks(prgoram);
-	if(!create_threads(prgoram))
+	program->start_flag = FALSE;
+	link_forks(program);
+	if(!create_threads(program))
 		return (FALSE);
-	pthread_mutex_unlock(&prgoram->start_lock);
-	if(!join_threads(prgoram))
+	pthread_mutex_lock(&program->start_lock);
+	program->start_flag = TRUE;
+	pthread_mutex_unlock(&program->start_lock);
+	if(!join_threads(program))
 		return (FALSE);
 	return (TRUE);
 }

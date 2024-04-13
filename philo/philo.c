@@ -1,5 +1,17 @@
 #include "philo.h"
 
+int head_so_good_she_honor_roll(t_program *program)
+{
+	pthread_mutex_lock(&program->start_lock);
+	if(program->start_flag)
+	{
+		pthread_mutex_unlock(&program->start_lock);
+		return (TRUE);
+	}
+	pthread_mutex_unlock(&program->start_lock);
+	return (FALSE);
+}
+
 void *philo_routine(void *void_philo)
 {
 	t_philo *philo;
@@ -7,8 +19,7 @@ void *philo_routine(void *void_philo)
 
 	philo = (t_philo *)void_philo;
 	program = philo->program;
-    pthread_mutex_lock(&program->start_lock);
-    pthread_mutex_unlock(&program->start_lock);
+	while(!head_so_good_she_honor_roll(program));
 	if(philo->philo_index % 2 == 0)
 		ft_usleep(program->time_to_eat / 2);
 	while(TRUE)

@@ -161,7 +161,6 @@ void init_philo(t_program *program)
         program->philos_arr[i].program = program;
         program->philos_arr[i].last_eat = 0;
         program->philos_arr[i].already = 0;
-
         if(!program->philos_arr[i].philo_id)
             philo_routine(&program->philos_arr[i]);
         i++;

@@ -20,6 +20,7 @@ struct s_program
 	pthread_mutex_t dead_lock;
 	pthread_mutex_t start_lock;
 	pthread_t observer_id;
+	int start_flag;
 	int is_locked;
 	int philo_count;
 	int time_to_die;
