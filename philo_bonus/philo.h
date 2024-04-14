@@ -95,7 +95,7 @@ enum EXIT_STATUS
 // GENERAL UTLS
 void error_handler(int mode);
 int parse_and_check(int ac, char **av, t_program *original);
-int	ft_atoi(const char *str);
+int	ft_atoi(const char *str, int *error_flag);
 void clean_all(t_program *program, int mode);
 void init_philo(t_program *program);
 void *observer_of_all(void *void_program);

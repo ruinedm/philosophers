@@ -45,13 +45,15 @@ t_bool is_valid_av(int ac,char **av)
 
 int parse_and_check(int ac, char **av, t_program *program) 
 {
+	int error_flag;
+	error_flag = FALSE;
     if((ac != 5 && ac != 6) || !is_valid_av(ac, av))
         return (error_handler(INPUT_ERROR), FALSE);
-    program->philo_count = ft_atoi(av[1]);
-    program->time_to_die = ft_atoi(av[2]);
-    program->time_to_eat = ft_atoi(av[3]);
-    program->time_to_sleep = ft_atoi(av[4]);
-    if(!program->philo_count || !program->time_to_die || !program->time_to_eat || !program->time_to_sleep)
+    program->philo_count = ft_atoi(av[1], &error_flag);
+    program->time_to_die = ft_atoi(av[2], &error_flag);
+    program->time_to_eat = ft_atoi(av[3], &error_flag);
+    program->time_to_sleep = ft_atoi(av[4], &error_flag);
+    if(!program->philo_count || !program->time_to_die || !program->time_to_eat || !program->time_to_sleep || error_flag)
         return (error_handler(INPUT_ERROR), FALSE);
     program->is_limited = FALSE;
     program->number_of_eat = -1;
@@ -64,8 +66,8 @@ int parse_and_check(int ac, char **av, t_program *program)
     if(ac == 6) 
 	{
         program->is_limited = TRUE;
-        program->number_of_eat = ft_atoi(av[5]);
-        if(!program->number_of_eat)
+        program->number_of_eat = ft_atoi(av[5], &error_flag);
+        if(!program->number_of_eat || error_flag)
             return (error_handler(INPUT_ERROR), FALSE);
     }
     return (TRUE);

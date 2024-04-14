@@ -1,6 +1,6 @@
 #include "philo.h"
 
-static int	str_to_int(const char *str, int i, int sign)
+static int	str_to_int(const char *str, int i, int sign, int *error_flag)
 {
 	unsigned long long	nb;
 	int					count;
@@ -10,25 +10,25 @@ static int	str_to_int(const char *str, int i, int sign)
 	while (str[i] >= '0' && str[i] <= '9')
 	{
 		count++;
-		if (count == 20)
+		if (count == 11)
 		{
 			if (sign == -1)
-				return (0);
-			return (-1);
+				return (*error_flag = TRUE, 0);
+			return (*error_flag = TRUE, -1);
 		}
 		nb = nb * 10 + str[i] - '0';
 		i++;
 	}
-	if (nb > LONG_MAX)
+	if (nb > INT_MAX)
 	{
 		if (sign == -1)
-			return (0);
-		return (-1);
+			return (*error_flag = TRUE, 0);
+		return (*error_flag = TRUE, -1);
 	}
 	return ((int)nb * sign);
 }
 
-int	ft_atoi(const char *str)
+int	ft_atoi(const char *str, int *error_flag)
 {
 	int		sign;
 	size_t	i;
@@ -45,5 +45,5 @@ int	ft_atoi(const char *str)
 	}
 	while (str[i] == '0')
 		i++;
-	return (str_to_int(str, i, sign));
+	return (str_to_int(str, i, sign, error_flag));
 }
