@@ -81,7 +81,11 @@ enum e_CLEAN_MODES
 	CLEAN_PROGRAM
 };
 
-
+enum e_ON_ERRROR_MODES
+{
+	CLEAN_RIGHT_FORK,
+	CLEAN_BOTH
+};
 // GENERAL UTLS
 void error_handler(int mode);
 int parse_and_check(int ac, char **av, t_program *original);
@@ -90,10 +94,10 @@ void clean_all(t_program *program, int mode);
 int init_philo(t_program *program);
 void *observer_of_all(void *void_program);
 int check_dead(t_program *program);
-void clean_on_error(t_program *program, t_philo *philos_arr, int current);
+void clean_on_error(t_program *program, t_philo *philos_arr, int current, int mode);
 void *philo_routine(void *void_philo);
 void set_as_dead(t_program *program);
-
+void join_on_error(t_program *program, int current);
 // TIME UTILS
 time_t get_time(void);
 time_t get_timestamp(t_program *program);

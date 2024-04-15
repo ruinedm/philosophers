@@ -1,5 +1,7 @@
 #include "philo.h"
 
+
+
 int create_threads(t_program *program) 
 {
     int i = 0;
@@ -8,12 +10,12 @@ int create_threads(t_program *program)
 
     while (i < arr_size) 
 	{
-        if(pthread_create(&(*philos_arr)[i].philo_id, NULL, philo_routine, &(*philos_arr)[i]))
-			return (set_as_dead(program), error_handler(CREATE_THREAD_ERROR), clean_all(program, CLEAN_ALL), FALSE);
+        if(i == 5 || pthread_create(&(*philos_arr)[i].philo_id, NULL, philo_routine, &(*philos_arr)[i]))
+			return (set_as_dead(program), join_on_error(program, i), error_handler(CREATE_THREAD_ERROR), clean_all(program, CLEAN_ALL), FALSE);
         i++;
     }
     if(pthread_create(&program->observer_id, NULL, observer_of_all, program))
-		return (set_as_dead(program), error_handler(CREATE_THREAD_ERROR), clean_all(program, CLEAN_ALL), FALSE);
+		return (set_as_dead(program),join_on_error(program, i),error_handler(CREATE_THREAD_ERROR), clean_all(program, CLEAN_ALL), FALSE);
 	return (TRUE);
 }
 
@@ -80,13 +82,13 @@ int init_philo(t_program *program)
 		philos_arr[i].philo_index = i;
 		philos_arr[i].right_fork = malloc(sizeof(pthread_mutex_t));
 		if(philos_arr[i].right_fork == NULL)
-			return (clean_on_error(program,philos_arr, i), error_handler(MALLOC_ERROR),clean_all(program, CLEAN_PROGRAM), FALSE);
+			return (clean_on_error(program,philos_arr, i, -1), error_handler(MALLOC_ERROR),clean_all(program, CLEAN_PROGRAM), FALSE);
 		philos_arr[i].left_fork = NULL;
 		philos_arr[i].last_eat = get_timestamp(program);
 		if(pthread_mutex_init(&philos_arr[i].last_eat_lock, NULL))
-			return (clean_on_error(program,philos_arr, i), error_handler(MALLOC_ERROR),clean_all(program, CLEAN_PROGRAM), FALSE);
+			return (clean_on_error(program,philos_arr, i, CLEAN_RIGHT_FORK), error_handler(MALLOC_ERROR),clean_all(program, CLEAN_PROGRAM), FALSE);
 		if(pthread_mutex_init(philos_arr[i].right_fork, NULL))
-			return (clean_on_error(program,philos_arr, i), error_handler(MALLOC_ERROR),clean_all(program, CLEAN_PROGRAM), FALSE);
+			return (clean_on_error(program,philos_arr, i, CLEAN_BOTH), error_handler(MALLOC_ERROR),clean_all(program, CLEAN_PROGRAM), FALSE);
 		i++;
 	}
 	program->philos_arr = philos_arr;

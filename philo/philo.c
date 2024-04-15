@@ -6,26 +6,10 @@ int head_so_good_she_honor_roll(t_program *program)
 	if(program->start_flag)
 	{
 		pthread_mutex_unlock(&program->start_lock);
-		return (TRUE);
+		return (FALSE);
 	}
 	pthread_mutex_unlock(&program->start_lock);
-	return (FALSE);
-}
-
-void print_program_info(t_program *program) {
-    printf("Program Information:\n");
-    printf("start_flag: %d\n", program->start_flag);
-    printf("is_locked: %d\n", program->is_locked);
-    printf("philo_count: %d\n", program->philo_count);
-    printf("time_to_die: %d\n", program->time_to_die);
-    printf("time_to_eat: %d\n", program->time_to_eat);
-    printf("time_to_sleep: %d\n", program->time_to_sleep);
-    printf("start_timestamp: %ld\n", (long)program->start_timestamp);
-    printf("is_limited: %s\n", program->is_limited ? "TRUE" : "FALSE");
-    printf("number_of_eat: %d\n", program->number_of_eat);
-    printf("eat_count: %d\n", program->eat_count);
-    printf("dead_flag: %d\n", program->dead_flag);
-    // Add more fields as needed
+	return (TRUE);
 }
 
 void *philo_routine(void *void_philo)
@@ -35,7 +19,13 @@ void *philo_routine(void *void_philo)
 
 	philo = (t_philo *)void_philo;
 	program = philo->program;
-	while(!head_so_good_she_honor_roll(program));
+	while(TRUE)
+	{
+		if(!head_so_good_she_honor_roll(program))
+			break;
+		if (check_dead(program))
+			return (NULL);
+	}
 	if(philo->philo_index % 2 == 0)
 		ft_usleep(program->time_to_eat / 2);
 	while(TRUE)

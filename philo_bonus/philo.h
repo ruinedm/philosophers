@@ -100,7 +100,7 @@ void clean_all(t_program *program, int mode);
 void init_philo(t_program *program);
 void *observer_of_all(void *void_program);
 int check_dead(t_program *program);
-void clean_on_error(t_program *program, t_philo *philos_arr, int current);
+void clean_on_error(t_program *program, t_philo *philos_arr, int current, int mode);
 void set_as_dead(t_program *program);
 char	*ft_strjoin(const char *s1, const char *s2);
 char	*ft_itoa(int n);

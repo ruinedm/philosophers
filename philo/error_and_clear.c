@@ -38,7 +38,7 @@ void clean_all(t_program *program, int mode)
         clean_program(program);
 }
 
-void clean_on_error(t_program *program, t_philo *philos_arr, int current)
+void clean_on_error(t_program *program, t_philo *philos_arr, int current, int mode)
 {
 	int i;
 
@@ -51,6 +51,13 @@ void clean_on_error(t_program *program, t_philo *philos_arr, int current)
 		i++;
 	}
 	free(philos_arr);
+    // if(mode == RIGHT_FORK)
+    //     free(philos_arr[i].right_fork);
+    // else if (mode == CLEAN_BOTH)
+    // {
+    //     free(philos_arr[i].right_fork);
+    //     pthread_mutex_destroy(&philos_arr[i].last_eat_lock);
+    // }
 	clean_all(program, CLEAN_PROGRAM);
 }
 void error_handler(int mode)
@@ -67,4 +74,17 @@ void error_handler(int mode)
         print_error("Error: Could not join thread!\n");
     else if (mode == MUTEX_INIT_ERROR)
         print_error("Error: Could not initialize mutex!\n");
+}
+
+
+void join_on_error(t_program *program, int current)
+{
+    int i;
+
+    i = 0;
+    while (i < current)
+    {
+        pthread_join(program->philos_arr[i].philo_id, NULL);
+        i++;
+    }
 }
