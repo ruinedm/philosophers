@@ -21,7 +21,6 @@ struct s_program
 	char *semaphore;
 	sem_t *forks;
 	sem_t *print_sem;
-	sem_t *start_sem;
 	int is_locked;
 	int philo_count;
 	int time_to_die;
@@ -37,15 +36,19 @@ struct s_program
 
 struct s_philo
 {
+	char *last_eat_str;
+    char *eaten_enough_str;
+    char *thread_sync_str;
 	pthread_t philo_observer;
 	t_program *program;
 	pid_t philo_id;
 	int	philo_index;
 	int last_eat;
 	int eat_count;
-	sem_t *last_eat_sem;
 	int already;
+	sem_t *last_eat_sem;
 	sem_t *eaten_enough_sem;
+	sem_t *thread_sync_sem;
 };
 
 enum e_ERROR_MODES
@@ -55,7 +58,8 @@ enum e_ERROR_MODES
 	MALLOC_ERROR,
 	CREATE_THREAD_ERROR,
 	JOIN_THREAD_ERROR,
-	MUTEX_INIT_ERROR
+	MUTEX_INIT_ERROR,
+	PROCESS_FATAL_ERROR
 };
 
 enum e_BOOLEAN
@@ -93,10 +97,11 @@ enum EXIT_STATUS
 
 
 // GENERAL UTLS
+
+void clean_all(t_program *program);
 void error_handler(int mode);
 int parse_and_check(int ac, char **av, t_program *original);
 int	ft_atoi(const char *str, int *error_flag);
-void clean_all(t_program *program, int mode);
 void init_philo(t_program *program);
 void *observer_of_all(void *void_program);
 int check_dead(t_program *program);

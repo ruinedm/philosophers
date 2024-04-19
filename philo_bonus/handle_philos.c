@@ -13,7 +13,14 @@ void *philo_observer_routine(void *void_philo)
     {
         sem_wait(philo->last_eat_sem);
         if(get_timestamp(program) - philo->last_eat > program->time_to_die)
+        {
+            sem_close(program->forks);
+            sem_close(program->print_sem);
+            sem_close(philo->last_eat_sem);
+            sem_close(philo->last_eat_sem);
+            sem_close(philo->eaten_enough_sem);
             exit(DEAD_PHILO);
+        }
         sem_post(philo->last_eat_sem);
         if(program->is_limited)
         {
@@ -22,6 +29,11 @@ void *philo_observer_routine(void *void_philo)
             {
                 sem_post(program->forks);
                 sem_post(program->forks);
+                sem_close(program->forks);
+                sem_close(program->print_sem);
+                sem_close(philo->last_eat_sem);
+                sem_close(philo->last_eat_sem);
+                sem_close(philo->eaten_enough_sem);
                 exit(EATEN_ENOUGH);
             }
             sem_post(philo->eaten_enough_sem);
@@ -30,25 +42,35 @@ void *philo_observer_routine(void *void_philo)
     return (NULL);
 }
 
+
+
 void philo_routine(t_philo *philo)
 {
-    char *last_eat_str_sem;
-    char *eaten_enough_sem;
+    char *philo_index;
     t_program *program;
 
+    philo_index = ft_itoa(philo->philo_index);
     program = philo->program;
-    last_eat_str_sem = ft_strjoin("/last_eat_", ft_itoa(philo->philo_index));
-    eaten_enough_sem = ft_strjoin("/eaten_enough_", ft_itoa(philo->philo_index));
-    sem_unlink(last_eat_str_sem);
-    philo->last_eat_sem = sem_open(last_eat_str_sem, O_CREAT | O_EXCL, 0644, 1);
+    philo->last_eat_str = ft_strjoin("/last_eat_", philo_index);
+    philo->eaten_enough_str = ft_strjoin("/eaten_enough_", philo_index);
+    philo->thread_sync_str = ft_strjoin("/thread_sync_", philo_index);
+    sem_unlink(philo->last_eat_str);
+    philo->last_eat_sem = sem_open(philo->last_eat_str, O_CREAT | O_EXCL, 0644, 1);
     if(philo->last_eat_sem == SEM_FAILED)
     {
         perror("sem_open");
         exit(EXIT_FAILURE);
     }
-    sem_unlink(eaten_enough_sem);
-    philo->eaten_enough_sem = sem_open(eaten_enough_sem, O_CREAT | O_EXCL, 0644, 1);
+    sem_unlink(philo->eaten_enough_str);
+    philo->eaten_enough_sem = sem_open(philo->eaten_enough_str, O_CREAT | O_EXCL, 0644, 1);
     if(philo->eaten_enough_sem == SEM_FAILED)
+    {
+        perror("sem_open");
+        exit(EXIT_FAILURE);
+    }
+    sem_unlink(philo->thread_sync_str);
+    philo->thread_sync_sem = sem_open(philo->thread_sync_str, O_CREAT | O_EXCL, 0644, 1);
+    if(philo->thread_sync_sem == SEM_FAILED)
     {
         perror("sem_open");
         exit(EXIT_FAILURE);
@@ -125,10 +147,18 @@ void observe_philos(t_program *program)
                     }
                     else if (WEXITSTATUS(status) == EATEN_ENOUGH)
                         program->philos_done_eating++;
+                    else if (WEXITSTATUS(status) == EXIT_FAILURE)
+                    {
+                        kill_all(program, i);
+                        exit(EXIT_FAILURE);
+                    }
                 }
             }
             if(program->philos_done_eating == program->philo_count)
-                exit(EXIT_SUCCESS);
+                {
+                    clean_all(program);
+                    exit(EXIT_SUCCESS);
+                }
             i++;
         }
     }

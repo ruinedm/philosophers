@@ -27,5 +27,19 @@ void error_handler(int mode)
         print_error("Error: Could not join thread!\n");
     else if (mode == MUTEX_INIT_ERROR)
         print_error("Error: Could not initialize mutex!\n");
+
 	exit(EXIT_FAILURE);
+}
+
+void clean_all(t_program *program)
+{
+	int i;
+
+	i = 0;
+	while(i < program->philo_count)
+	{
+		free(&program->philos_arr[i]);
+		i++;
+	}
+	free(program->philos_arr);
 }
