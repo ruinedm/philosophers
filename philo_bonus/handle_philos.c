@@ -16,7 +16,7 @@ void *philo_observer_routine(void *void_philo)
         if(time - philo->last_eat > program->time_to_die)
         {
             sem_wait(program->print_sem);
-            printf("%ld %i has died // Last eat: %d\n", get_timestamp(program), philo->philo_index + 1, philo->last_eat);
+            printf("%ld %i has died", get_timestamp(program), philo->philo_index + 1, philo->last_eat);
             exit(DEAD_PHILO);
         }
         if(program->is_limited)
@@ -68,8 +68,6 @@ void philo_routine(t_philo *philo)
     }
     pthread_create(&philo->philo_observer, NULL, philo_observer_routine, (void *)philo);
     pthread_detach(philo->philo_observer);
-    if(philo->philo_index > philo->program->philo_count / 2)
-        usleep(100);
     while (TRUE)
     {
         sem_wait(program->forks);

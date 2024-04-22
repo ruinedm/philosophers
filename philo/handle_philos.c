@@ -84,7 +84,7 @@ int init_philo(t_program *program)
 		if(philos_arr[i].right_fork == NULL)
 			return (clean_on_error(program,philos_arr, i, -1), error_handler(MALLOC_ERROR),clean_all(program, CLEAN_PROGRAM), FALSE);
 		philos_arr[i].left_fork = NULL;
-		philos_arr[i].last_eat = get_timestamp(program);
+		philos_arr[i].last_eat = 0;
 		if(pthread_mutex_init(&philos_arr[i].last_eat_lock, NULL))
 			return (clean_on_error(program,philos_arr, i, CLEAN_RIGHT_FORK), error_handler(MALLOC_ERROR),clean_all(program, CLEAN_PROGRAM), FALSE);
 		if(pthread_mutex_init(philos_arr[i].right_fork, NULL))
