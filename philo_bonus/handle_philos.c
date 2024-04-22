@@ -5,43 +5,34 @@ void *philo_observer_routine(void *void_philo)
 {
     t_philo *philo;
     t_program *program;
+    time_t time;
 
     philo = (t_philo *)void_philo;
     program = philo->program;
-    ft_usleep(2);
     while (TRUE)
     {
         sem_wait(philo->last_eat_sem);
-        if(get_timestamp(program) - philo->last_eat > program->time_to_die)
+        time = get_timestamp(program);
+        if(time - philo->last_eat > program->time_to_die)
         {
-            sem_close(program->forks);
-            sem_close(program->print_sem);
-            sem_close(philo->last_eat_sem);
-            sem_close(philo->last_eat_sem);
-            sem_close(philo->eaten_enough_sem);
+            sem_wait(program->print_sem);
+            printf("%ld %i has died // Last eat: %d\n", get_timestamp(program), philo->philo_index + 1, philo->last_eat);
             exit(DEAD_PHILO);
         }
-        sem_post(philo->last_eat_sem);
         if(program->is_limited)
         {
-            sem_wait(philo->eaten_enough_sem);
             if(philo->eat_count >= program->number_of_eat)
             {
                 sem_post(program->forks);
                 sem_post(program->forks);
-                sem_close(program->forks);
-                sem_close(program->print_sem);
-                sem_close(philo->last_eat_sem);
-                sem_close(philo->last_eat_sem);
-                sem_close(philo->eaten_enough_sem);
                 exit(EATEN_ENOUGH);
             }
-            sem_post(philo->eaten_enough_sem);
         }
+        sem_post(philo->last_eat_sem);
+        usleep(100);
     }
     return (NULL);
 }
-
 
 
 void philo_routine(t_philo *philo)
@@ -78,7 +69,7 @@ void philo_routine(t_philo *philo)
     pthread_create(&philo->philo_observer, NULL, philo_observer_routine, (void *)philo);
     pthread_detach(philo->philo_observer);
     if(philo->philo_index > philo->program->philo_count / 2)
-        ft_usleep(program->time_to_die / 2);
+        usleep(100);
     while (TRUE)
     {
         sem_wait(program->forks);
@@ -91,10 +82,8 @@ void philo_routine(t_philo *philo)
         sem_post(program->print_sem);
         sem_wait(philo->last_eat_sem);
         philo->last_eat = get_timestamp(program);
-        sem_post(philo->last_eat_sem);
-        sem_wait(philo->eaten_enough_sem);
         philo->eat_count++;
-        sem_post(philo->eaten_enough_sem);
+        sem_post(philo->last_eat_sem);
         sem_wait(program->print_sem);
         printf("%ld %i is eating\n", get_timestamp(program), philo->philo_index + 1);
         sem_post(program->print_sem);
@@ -142,7 +131,6 @@ void observe_philos(t_program *program)
                     if(WEXITSTATUS(status) == DEAD_PHILO)
                     {
                         kill_all(program, i);
-                        printf("%ld %i has died\n", get_timestamp(program), i + 1);
                         exit(EXIT_SUCCESS);
                     }
                     else if (WEXITSTATUS(status) == EATEN_ENOUGH)
@@ -154,11 +142,8 @@ void observe_philos(t_program *program)
                     }
                 }
             }
-            if(program->philos_done_eating == program->philo_count)
-                {
-                    clean_all(program);
-                    exit(EXIT_SUCCESS);
-                }
+            if(program->is_limited && program->philos_done_eating == program->philo_count)
+                exit(EXIT_SUCCESS);
             i++;
         }
     }
@@ -185,8 +170,8 @@ void init_philo(t_program *program)
     {
         program->philos_arr[i].philo_index = i;
         program->philos_arr[i].eat_count = 0;
-        program->philos_arr[i].philo_id = fork();
         program->philos_arr[i].program = program;
+        program->philos_arr[i].philo_id = fork();
         program->philos_arr[i].last_eat = 0;
         program->philos_arr[i].already = 0;
         if(!program->philos_arr[i].philo_id)

@@ -82,7 +82,7 @@ int print_eating(t_philo *philo)
 		pthread_mutex_unlock(philo->right_fork);
 		pthread_mutex_unlock(philo->left_fork);
 		pthread_mutex_unlock(&program->print_lock);
-		return FALSE;
+		return (FALSE);
 	}
 	printf("%ld %d is eating\n", get_timestamp(program), philo->philo_index + 1);
 	pthread_mutex_unlock(&program->print_lock);

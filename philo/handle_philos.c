@@ -10,7 +10,7 @@ int create_threads(t_program *program)
 
     while (i < arr_size) 
 	{
-        if(i == 5 || pthread_create(&(*philos_arr)[i].philo_id, NULL, philo_routine, &(*philos_arr)[i]))
+        if(pthread_create(&(*philos_arr)[i].philo_id, NULL, philo_routine, &(*philos_arr)[i]))
 			return (set_as_dead(program), join_on_error(program, i), error_handler(CREATE_THREAD_ERROR), clean_all(program, CLEAN_ALL), FALSE);
         i++;
     }
