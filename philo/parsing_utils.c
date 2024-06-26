@@ -1,93 +1,76 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parsing_utils.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/06/26 20:53:35 by mboukour          #+#    #+#             */
+/*   Updated: 2024/06/26 21:26:20 by mboukour         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "philo.h"
 
-t_bool is_num(char *str)
+t_bool	is_num(char *str)
 {
-	int i;
+	int	i;
 
 	i = 0;
-	if(str[i] == '+' || str[i] == '-')
+	if (str[i] == '+' || str[i] == '-')
 	{
 		i++;
-		if(!str[i])
+		if (!str[i])
 			return (FALSE);
 	}
-	while(str[i])
+	while (str[i])
 	{
-		if(str[i] < '0' || str[i] > '9')
+		if (str[i] < '0' || str[i] > '9')
 			return (FALSE);
 		i++;
 	}
 	return (TRUE);
 }
 
-t_bool is_pos_num(char *str)
+t_bool	is_pos_num(char *str)
 {
-	if(str[0] == '-')
+	if (str[0] == '-')
 		return (FALSE);
 	return (TRUE);
 }
 
-t_bool is_valid_av(int ac,char **av)
+t_bool	is_valid_av(int ac, char **av)
 {
-	int i;
+	int	i;
 
 	i = 1;
-	while(i < ac)
+	while (i < ac)
 	{
-		if(!is_num(av[i]) || !is_pos_num(av[i]))
+		if (!is_num(av[i]) || !is_pos_num(av[i]))
 			return (FALSE);
 		i++;
 	}
 	return (TRUE);
 }
 
-int initialize_mutexes(t_program *program) 
+int	initialize_mutexes(t_program *program)
 {
-    if(pthread_mutex_init(&program->print_lock, NULL))
-        return (error_handler(MUTEX_INIT_ERROR), FALSE);
-    if(pthread_mutex_init(&program->dead_lock, NULL))
-        return (pthread_mutex_destroy(&program->print_lock),error_handler(MUTEX_INIT_ERROR), FALSE);
-    if(pthread_mutex_init(&program->start_lock, NULL))
-        return (pthread_mutex_destroy(&program->print_lock),pthread_mutex_destroy(&program->dead_lock),error_handler(MUTEX_INIT_ERROR), FALSE);
-    if(program->is_limited)
-    {
-        if(pthread_mutex_init(&program->count_lock, NULL))
-        {
-            pthread_mutex_destroy(&program->print_lock);
-            pthread_mutex_destroy(&program->dead_lock);
-            pthread_mutex_destroy(&program->start_lock);
-            return (FALSE);
-        }
-    }
-    return (TRUE);
+	if (pthread_mutex_init(&program->print_lock, NULL))
+		return (error_handler(MUTEX_INIT_ERROR), FALSE);
+	if (pthread_mutex_init(&program->dead_lock, NULL))
+		return (pthread_mutex_destroy(&program->print_lock), error_handler(MUTEX_INIT_ERROR), FALSE);
+	if (pthread_mutex_init(&program->start_lock, NULL))
+		return (pthread_mutex_destroy(&program->print_lock), pthread_mutex_destroy(&program->dead_lock),error_handler(MUTEX_INIT_ERROR), FALSE);
+	if (program->is_limited)
+	{
+		if (pthread_mutex_init(&program->count_lock, NULL))
+		{
+			pthread_mutex_destroy(&program->print_lock);
+			pthread_mutex_destroy(&program->dead_lock);
+			pthread_mutex_destroy(&program->start_lock);
+			return (FALSE);
+		}
+	}
+	return (TRUE);
 }
 
-int parse_and_check(int ac, char **av, t_program *program) 
-{
-    int error_flag;
-    error_flag = FALSE;
-    if((ac != 5 && ac != 6) || !is_valid_av(ac, av))
-        return (error_handler(INPUT_ERROR), FALSE);
-    program->philo_count = ft_atoi(av[1], &error_flag);
-    program->time_to_die = ft_atoi(av[2], &error_flag);
-    program->time_to_eat = ft_atoi(av[3], &error_flag);
-    program->time_to_sleep = ft_atoi(av[4], &error_flag);
-    if(!program->philo_count || !program->time_to_die || !program->time_to_eat || !program->time_to_sleep || error_flag)
-        return (error_handler(INPUT_ERROR), FALSE);
-    program->is_limited = FALSE;
-    program->number_of_eat = -1;
-    program->eat_count = 0;
-    program->start_timestamp = get_time();
-    if(program->start_timestamp == 0)
-        return (error_handler(TIME_ERROR), FALSE);
-    program->is_locked = FALSE;
-    program->dead_flag = FALSE;
-    if(ac == 6) 
-	{
-        program->is_limited = TRUE;
-        program->number_of_eat = ft_atoi(av[5], &error_flag);
-        if(!program->number_of_eat || error_flag)
-            return (error_handler(INPUT_ERROR), FALSE);
-    }
-    return (initialize_mutexes(program));
-}

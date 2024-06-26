@@ -16,7 +16,7 @@ void *philo_observer_routine(void *void_philo)
         if(time - philo->last_eat > program->time_to_die)
         {
             sem_wait(program->print_sem);
-            printf("%ld %i has died", get_timestamp(program), philo->philo_index + 1, philo->last_eat);
+            printf("%ld %i has died", get_timestamp(program), philo->philo_index + 1);
             exit(DEAD_PHILO);
         }
         if(program->is_limited)

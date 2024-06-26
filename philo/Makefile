@@ -2,7 +2,7 @@ CC = cc
 FLAGS = -pthread -finline-functions -g
 
 NAME = philo
-SRC = philo.c  parsing_utils.c conversion_utils.c handle_philos.c time_utils.c printing_utils.c observer_of_all.c error_and_clear.c
+SRC = init_philo.c conversion_utils.c error_and_clear.c observer_of_all.c parser.c parsing_utils.c philo.c printing_utils.c time_utils.c
 OBJ = $(SRC:.c=.o)
 HEADER = philo.h
 
