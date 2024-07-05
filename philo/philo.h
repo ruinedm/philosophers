@@ -6,7 +6,7 @@
 /*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/26 20:53:44 by mboukour          #+#    #+#             */
-/*   Updated: 2024/06/26 22:08:12 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/07/05 16:05:57 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,7 +113,7 @@ void	join_on_error(t_program *program, int current);
 
 t_bool	is_valid_av(int ac, char **av);
 int		initialize_mutexes(t_program *program);
-int	start_the_simulation(t_program *program);
+int		start_the_simulation(t_program *program);
 
 time_t	get_time(void);
 time_t	get_timestamp(t_program *program);

@@ -6,7 +6,7 @@
 /*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/26 21:04:56 by mboukour          #+#    #+#             */
-/*   Updated: 2024/06/26 21:20:54 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/07/05 15:26:47 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,21 +20,6 @@ static void	clean_program(t_program *program)
 		pthread_mutex_destroy(&program->count_lock);
 }
 
-static void	clean_philos(t_program *program)
-{
-	int	i;
-
-	i = 0;
-	while (i < program->philo_count)
-	{
-		pthread_mutex_destroy(&program->philos_arr[i].last_eat_lock);
-		pthread_mutex_destroy(program->philos_arr[i].right_fork);
-		free(program->philos_arr[i].right_fork);
-		i++;
-	}
-	free(program->philos_arr);
-}
-
 void	clean_all(t_program *program, int mode)
 {
 	int	i;
@@ -42,7 +27,14 @@ void	clean_all(t_program *program, int mode)
 	i = 0;
 	if (mode == CLEAN_ALL)
 	{
-		clean_philos(program);
+		while (i < program->philo_count)
+		{
+			pthread_mutex_destroy(&program->philos_arr[i].last_eat_lock);
+			pthread_mutex_destroy(program->philos_arr[i].right_fork);
+			free(program->philos_arr[i].right_fork);
+			i++;
+		}
+		free(program->philos_arr);
 		clean_program(program);
 	}
 	else if (mode == CLEAN_PROGRAM)

@@ -1,5 +1,5 @@
 CC = cc
-FLAGS = -pthread -finline-functions -g
+FLAGS = -pthread 
 
 NAME = philo
 SRC = init_philo.c conversion_utils.c error_and_clear.c observer_of_all.c parser.c parsing_utils.c philo.c printing_utils.c time_utils.c

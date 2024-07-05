@@ -109,6 +109,12 @@ void clean_on_error(t_program *program, t_philo *philos_arr, int current, int mo
 void set_as_dead(t_program *program);
 char	*ft_strjoin(const char *s1, const char *s2);
 char	*ft_itoa(int n);
+
+
+void	create_thread_error(t_program *program, int i);
+int	create_threads(t_program *program);
+int	join_threads(t_program *program);
+
 // TIME UTILS
 time_t get_time(void);
 time_t get_timestamp(t_program *program);
