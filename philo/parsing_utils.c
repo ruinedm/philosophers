@@ -6,7 +6,7 @@
 /*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/26 20:53:35 by mboukour          #+#    #+#             */
-/*   Updated: 2024/06/26 21:26:20 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/07/17 02:42:47 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,9 +58,12 @@ int	initialize_mutexes(t_program *program)
 	if (pthread_mutex_init(&program->print_lock, NULL))
 		return (error_handler(MUTEX_INIT_ERROR), FALSE);
 	if (pthread_mutex_init(&program->dead_lock, NULL))
-		return (pthread_mutex_destroy(&program->print_lock), error_handler(MUTEX_INIT_ERROR), FALSE);
+		return (pthread_mutex_destroy(&program->print_lock),
+			error_handler(MUTEX_INIT_ERROR), FALSE);
 	if (pthread_mutex_init(&program->start_lock, NULL))
-		return (pthread_mutex_destroy(&program->print_lock), pthread_mutex_destroy(&program->dead_lock),error_handler(MUTEX_INIT_ERROR), FALSE);
+		return (pthread_mutex_destroy(&program->print_lock),
+			pthread_mutex_destroy(&program->dead_lock),
+			error_handler(MUTEX_INIT_ERROR), FALSE);
 	if (program->is_limited)
 	{
 		if (pthread_mutex_init(&program->count_lock, NULL))
@@ -73,4 +76,3 @@ int	initialize_mutexes(t_program *program)
 	}
 	return (TRUE);
 }
-

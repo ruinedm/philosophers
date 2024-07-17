@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_strjoin.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/07/17 08:19:07 by mboukour          #+#    #+#             */
+/*   Updated: 2024/07/17 08:19:09 by mboukour         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "philo.h"
 
 size_t	ft_strlen(const char *s)
@@ -19,8 +31,6 @@ char	*ft_strjoin(const char *s1, const char *s2)
 	int		i;
 	int		j;
 
-	// if (!s1 || !s2)
-	// 	return (ft_strdup(""));
 	i = 0;
 	j = 0;
 	finalstr = (char *)malloc((ft_strlen(s1) + ft_strlen(s2) + 1)

@@ -6,7 +6,7 @@
 /*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/26 20:53:49 by mboukour          #+#    #+#             */
-/*   Updated: 2024/06/26 21:45:32 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/07/17 08:33:02 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,12 +92,9 @@ int	print_eating(t_philo *philo)
 	program = philo->program;
 	pthread_mutex_lock(&program->print_lock);
 	if (check_dead(program))
-	{
-		pthread_mutex_unlock(philo->right_fork);
-		pthread_mutex_unlock(philo->left_fork);
-		pthread_mutex_unlock(&program->print_lock);
-		return (FALSE);
-	}
+		return (pthread_mutex_unlock(philo->right_fork),
+			pthread_mutex_unlock(philo->left_fork),
+			pthread_mutex_unlock(&program->print_lock), FALSE);
 	printf("%ld %d is eating\n", get_timestamp(program),
 		philo->philo_index + 1);
 	pthread_mutex_unlock(&program->print_lock);
