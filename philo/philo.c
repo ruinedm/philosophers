@@ -6,7 +6,7 @@
 /*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/26 20:53:28 by mboukour          #+#    #+#             */
-/*   Updated: 2024/06/26 22:06:32 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/07/17 10:56:44 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,6 @@ void	*philo_routine(void *void_philo)
 	}
 	return (NULL);
 }
-int		init_philo(t_program *program);
 
 int	main(int ac, char **av)
 {

@@ -6,7 +6,7 @@
 /*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/26 20:53:44 by mboukour          #+#    #+#             */
-/*   Updated: 2024/07/05 16:05:57 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/07/17 11:08:12 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,12 +97,14 @@ enum e_ON_ERRROR_MODES
 	CLEAN_RIGHT_FORK,
 	CLEAN_BOTH
 };
-
+int		init_philo(t_program *program);
 void	error_handler(int mode);
 int		parse_and_check(int ac, char **av, t_program *original);
 int		ft_atoi(const char *str, int *error_flag);
 void	clean_all(t_program *program, int mode);
 
+int		create_threads(t_program *program);
+int		join_threads(t_program *program);
 void	*observer_of_all(void *void_program);
 int		check_dead(t_program *program);
 void	clean_on_error(t_program *program, t_philo *philos_arr, int current,
