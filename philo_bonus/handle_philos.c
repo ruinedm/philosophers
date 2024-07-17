@@ -6,7 +6,7 @@
 /*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/17 08:21:26 by mboukour          #+#    #+#             */
-/*   Updated: 2024/07/17 08:21:35 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/07/17 14:42:26 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,8 +28,11 @@ static void	*philo_observer_routine(void *void_philo)
 		if (time - philo->last_eat > program->time_to_die)
 		{
 			sem_wait(program->print_sem);
-			printf("%ld %i has died", get_timestamp(program),
+			printf("%ld %i has died\n", get_timestamp(program),
 				philo->philo_index + 1);
+			sem_close(philo->last_eat_sem);
+			sem_unlink(philo->last_eat_str);
+			free(philo->last_eat_str);
 			exit(DEAD_PHILO);
 		}
 		sem_post(philo->last_eat_sem);
@@ -50,8 +53,8 @@ static int	init_routine(t_program *program, t_philo *philo)
 		return (free(str_index), error_handler(MALLOC_ERROR),
 			exit(EXIT_FAILURE), 0);
 	free(str_index);
-	free(last_eat_str);
 	sem_unlink(last_eat_str);
+	philo->last_eat_str = last_eat_str;
 	philo->last_eat_sem = sem_open(last_eat_str, O_CREAT | O_EXCL, 0644, 1);
 	if (philo->last_eat_sem == SEM_FAILED)
 		return (perror("sem_open"), exit(EXIT_FAILURE), 0);
@@ -64,7 +67,6 @@ static int	init_routine(t_program *program, t_philo *philo)
 
 static void	philo_routine(t_philo *philo)
 {
-	char		*philo_index;
 	t_program	*program;
 
 	program = philo->program;
@@ -92,29 +94,25 @@ static void	go_philo(t_program *program, int i)
 	program->philos_arr[i].program = program;
 	program->philos_arr[i].philo_id = fork();
 	program->philos_arr[i].last_eat = 0;
-	if (!program->philos_arr[i].philo_id)
+	program->philos_arr[i].eat_count = 0;
+	if (program->philos_arr[i].philo_id == -1)
+	{
+		kill_on_error(program, i);
+		exit_procedure(EXIT_FAILURE, program);
+	}
+	else if (!program->philos_arr[i].philo_id)
 		philo_routine(&program->philos_arr[i]);
 }
 
 void	init_philo(t_program *program)
 {
-	pid_t	pid;
 	int		i;
 
 	i = 0;
 	program->philos_arr = malloc(sizeof(t_philo) * program->philo_count);
 	if (!program->philos_arr)
 		error_handler(MALLOC_ERROR);
-	sem_unlink("fork_semaphore");
-	program->forks = sem_open("fork_semaphore", O_CREAT | O_EXCL, 0644,
-			program->philo_count);
-	sem_unlink("print_sem");
-	program->print_sem = sem_open("print_sem", O_CREAT | O_EXCL, 0644, 1);
-	if (program->forks == SEM_FAILED)
-	{
-		perror("sem_open");
-		exit(EXIT_FAILURE);
-	}
+	first_sems(program);
 	while (i < program->philo_count)
 	{
 		go_philo(program, i);

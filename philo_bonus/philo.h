@@ -6,7 +6,7 @@
 /*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/17 08:26:34 by mboukour          #+#    #+#             */
-/*   Updated: 2024/07/17 08:29:30 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/07/17 14:39:32 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,6 @@ typedef struct s_program	t_program;
 
 struct s_program
 {
-	char	*semaphore;
 	sem_t	*forks;
 	sem_t	*print_sem;
 	int		is_locked;
@@ -37,27 +36,23 @@ struct s_program
 	int		time_to_die;
 	int		time_to_eat;
 	int		time_to_sleep;
+	int		philos_done_eating;
 	time_t	start_timestamp;
 	t_bool	is_limited;
 	int		number_of_eat;
-	int		philos_done_eating;
 	t_philo	*philos_arr;
 };
 
 struct s_philo
 {
-	char		*last_eat_str;
-	char		*eaten_enough_str;
-	char		*thread_sync_str;
 	pthread_t	philo_observer;
 	t_program	*program;
 	pid_t		philo_id;
 	int			philo_index;
 	int			last_eat;
 	int			eat_count;
+	char		*last_eat_str;
 	sem_t		*last_eat_sem;
-	sem_t		*eaten_enough_sem;
-	sem_t		*thread_sync_sem;
 };
 
 enum e_ERROR_MODES
@@ -103,6 +98,8 @@ enum e_EXIT_STATUS
 	EATEN_ENOUGH
 };
 
+void	first_sems(t_program *program);
+void	kill_on_error(t_program *program, int until);
 void	clean_all(t_program *program);
 void	error_handler(int mode);
 int		parse_and_check(int ac, char **av, t_program *original);
@@ -110,8 +107,7 @@ int		ft_atoi(const char *str, int *error_flag);
 void	init_philo(t_program *program);
 void	*observer_of_all(void *void_program);
 int		check_dead(t_program *program);
-void	clean_on_error(t_program *program, t_philo *philos_arr,
-			int current, int mode);
+void	exit_procedure(int status, t_program *program);
 void	set_as_dead(t_program *program);
 char	*ft_strjoin(const char *s1, const char *s2);
 char	*ft_itoa(int n);

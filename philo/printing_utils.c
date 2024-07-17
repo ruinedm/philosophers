@@ -6,7 +6,7 @@
 /*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/26 20:53:49 by mboukour          #+#    #+#             */
-/*   Updated: 2024/07/17 08:33:02 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/07/17 14:40:46 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,12 +102,8 @@ int	print_eating(t_philo *philo)
 	philo->last_eat = get_timestamp(program);
 	pthread_mutex_unlock(&philo->last_eat_lock);
 	ft_usleep(program->time_to_eat, program);
-	if (program->is_limited == TRUE)
-	{
-		pthread_mutex_lock(&program->count_lock);
-		philo->program->eat_count++;
-		pthread_mutex_unlock(&program->count_lock);
-	}
+	if (!limited_program(program, philo))
+		return (0);
 	return (pthread_mutex_unlock(philo->right_fork),
 		pthread_mutex_unlock(philo->left_fork), TRUE);
 }

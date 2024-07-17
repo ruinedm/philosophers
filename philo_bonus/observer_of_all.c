@@ -6,11 +6,24 @@
 /*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/17 08:22:11 by mboukour          #+#    #+#             */
-/*   Updated: 2024/07/17 08:22:27 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/07/17 12:11:06 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
+
+void	exit_procedure(int status, t_program *program)
+{
+	int	i;
+
+	i = 0;
+	free(program->philos_arr);
+	sem_close(program->forks);
+	sem_unlink("fork_sem");
+	sem_close(program->print_sem);
+	sem_unlink("print_sem");
+	exit(status);
+}
 
 void	something_happened(int status, t_program *program, int i)
 {
@@ -19,14 +32,14 @@ void	something_happened(int status, t_program *program, int i)
 		if (WEXITSTATUS(status) == DEAD_PHILO)
 		{
 			kill_all(program, i);
-			exit(EXIT_SUCCESS);
+			exit_procedure(EXIT_SUCCESS, program);
 		}
 		else if (WEXITSTATUS(status) == EATEN_ENOUGH)
 			program->philos_done_eating++;
 		else if (WEXITSTATUS(status) == EXIT_FAILURE)
 		{
 			kill_all(program, i);
-			exit(EXIT_FAILURE);
+			exit_procedure(EXIT_FAILURE, program);
 		}
 	}
 }

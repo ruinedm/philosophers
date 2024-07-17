@@ -6,7 +6,7 @@
 /*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/26 20:53:44 by mboukour          #+#    #+#             */
-/*   Updated: 2024/07/17 11:08:12 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/07/17 14:41:29 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,7 @@ struct s_program
 	int				number_of_eat;
 	int				eat_count;
 	int				dead_flag;
+	int				philos_done_eating;
 	t_philo			*philos_arr;
 };
 
@@ -51,6 +52,7 @@ struct s_philo
 	pthread_t		philo_id;
 	int				philo_index;
 	int				last_eat;
+	int				i_ate;
 	pthread_mutex_t	last_eat_lock;
 	pthread_mutex_t	*right_fork;
 	pthread_mutex_t	*left_fork;
@@ -107,8 +109,7 @@ int		create_threads(t_program *program);
 int		join_threads(t_program *program);
 void	*observer_of_all(void *void_program);
 int		check_dead(t_program *program);
-void	clean_on_error(t_program *program, t_philo *philos_arr, int current,
-			int mode);
+void	clean_on_error(t_program *program, t_philo *philos_arr, int current);
 void	*philo_routine(void *void_philo);
 void	set_as_dead(t_program *program);
 void	join_on_error(t_program *program, int current);
@@ -120,11 +121,11 @@ int		start_the_simulation(t_program *program);
 time_t	get_time(void);
 time_t	get_timestamp(t_program *program);
 int		ft_usleep(size_t milliseconds, t_program *program);
+int		limited_program(t_program *program, t_philo *philo);
 
 int		print_thinking(t_philo *philo);
 int		print_eating(t_philo *philo);
 int		print_sleeping(t_philo *philo);
 int		print_took_fork(t_philo *philo, int mode);
 void	print_error(char *str);
-
 #endif

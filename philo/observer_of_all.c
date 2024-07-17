@@ -6,7 +6,7 @@
 /*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/26 20:54:56 by mboukour          #+#    #+#             */
-/*   Updated: 2024/07/17 00:13:52 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/07/17 14:30:48 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ int	is_done_eating(t_program *program)
 	if (program->is_limited == TRUE)
 	{
 		pthread_mutex_lock(&program->count_lock);
-		if (program->eat_count >= program->philo_count * program->number_of_eat)
+		if (program->eat_count == program->philo_count)
 		{
 			pthread_mutex_unlock(&program->count_lock);
 			pthread_mutex_lock(&program->print_lock);

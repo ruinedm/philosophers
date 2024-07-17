@@ -6,7 +6,7 @@
 /*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/26 21:04:56 by mboukour          #+#    #+#             */
-/*   Updated: 2024/07/05 15:26:47 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/07/17 11:48:29 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,8 +41,7 @@ void	clean_all(t_program *program, int mode)
 		clean_program(program);
 }
 
-void	clean_on_error(t_program *program, t_philo *philos_arr, int current,
-	int mode)
+void	clean_on_error(t_program *program, t_philo *philos_arr, int current)
 {
 	int	i;
 

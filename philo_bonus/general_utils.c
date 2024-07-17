@@ -6,7 +6,7 @@
 /*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/17 08:28:39 by mboukour          #+#    #+#             */
-/*   Updated: 2024/07/17 08:28:41 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/07/17 12:16:53 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,18 @@ void	kill_all(t_program *program, int already_dead)
 	{
 		if (i != already_dead)
 			kill(program->philos_arr[i].philo_id, SIGKILL);
+		i++;
+	}
+}
+
+void	kill_on_error(t_program *program, int until)
+{
+	int	i;
+
+	i = 0;
+	while (i < until)
+	{
+		kill(program->philos_arr[i].philo_id, SIGKILL);
 		i++;
 	}
 }
