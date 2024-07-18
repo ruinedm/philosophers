@@ -6,7 +6,7 @@
 /*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/17 08:22:11 by mboukour          #+#    #+#             */
-/*   Updated: 2024/07/17 12:11:06 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/07/18 21:42:38 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,14 @@ void	something_happened(int status, t_program *program, int i)
 			kill_all(program, i);
 			exit_procedure(EXIT_FAILURE, program);
 		}
+	}
+	else if (WIFSIGNALED(status))
+	{
+		print_error("One of the simulation's processes (a philosopher) ");
+		print_error("has received an external signal, ");
+		print_error("the program will terminate now.");
+		kill_on_error(program, program->philo_count);
+		exit_procedure(EXIT_FAILURE, program);
 	}
 }
 

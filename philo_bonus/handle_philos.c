@@ -6,7 +6,7 @@
 /*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/17 08:21:26 by mboukour          #+#    #+#             */
-/*   Updated: 2024/07/17 14:42:26 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/07/18 21:42:07 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ static void	*philo_observer_routine(void *void_philo)
 	program = philo->program;
 	while (TRUE)
 	{
-		usleep(1000);
+		usleep(program->observer_sleep);
 		sem_wait(philo->last_eat_sem);
 		time = get_timestamp(program);
 		if (time - philo->last_eat > program->time_to_die)
@@ -81,7 +81,12 @@ static void	philo_routine(t_philo *philo)
 		philo->eat_count++;
 		eat_and_put_down_forks(program, philo);
 		if (program->is_limited && philo->eat_count >= program->number_of_eat)
+		{
+			sem_close(philo->last_eat_sem);
+			sem_unlink(philo->last_eat_str);
+			free(philo->last_eat_str);
 			exit(EATEN_ENOUGH);
+		}
 		sleep_think_philo(program, philo);
 	}
 	exit(EXIT_SUCCESS);

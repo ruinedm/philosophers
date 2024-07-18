@@ -6,7 +6,7 @@
 /*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/26 20:53:44 by mboukour          #+#    #+#             */
-/*   Updated: 2024/07/17 14:41:29 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/07/18 22:26:46 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,7 +121,7 @@ int		start_the_simulation(t_program *program);
 time_t	get_time(void);
 time_t	get_timestamp(t_program *program);
 int		ft_usleep(size_t milliseconds, t_program *program);
-int		limited_program(t_program *program, t_philo *philo);
+void	limited_program(t_program *program, t_philo *philo);
 
 int		print_thinking(t_philo *philo);
 int		print_eating(t_philo *philo);

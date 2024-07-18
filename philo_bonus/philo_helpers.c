@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   routine_helpers.c                                  :+:      :+:    :+:   */
+/*   philo_helpers.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/17 08:27:21 by mboukour          #+#    #+#             */
-/*   Updated: 2024/07/17 12:20:56 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/07/18 22:26:49 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,4 +43,11 @@ void	sleep_think_philo(t_program *program, t_philo *philo)
 	printf("%ld %i is thinking\n", get_timestamp(program),
 		philo->philo_index + 1);
 	sem_post(program->print_sem);
+}
+
+int	ft_abs(int a)
+{
+	if (a < 0)
+		return (-a);
+	return (a);
 }

@@ -6,7 +6,7 @@
 /*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/26 21:26:13 by mboukour          #+#    #+#             */
-/*   Updated: 2024/07/17 14:27:41 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/07/18 21:38:45 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ int	parse_arguments(int ac, char **av, t_program *program)
 int	initialize_program(t_program *program)
 {
 	if (!program->philo_count || !program->time_to_die || !program->time_to_eat
-		|| !program->time_to_sleep)
+		|| !program->time_to_sleep || !program->number_of_eat)
 		return (error_handler(INPUT_ERROR), FALSE);
 	program->eat_count = 0;
 	program->start_timestamp = get_time();

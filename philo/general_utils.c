@@ -6,7 +6,7 @@
 /*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/26 20:53:55 by mboukour          #+#    #+#             */
-/*   Updated: 2024/07/17 14:41:24 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/07/18 22:23:11 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ int	ft_usleep(size_t milliseconds, t_program *program)
 	return (0);
 }
 
-int	limited_program(t_program *program, t_philo *philo)
+void	limited_program(t_program *program, t_philo *philo)
 {
 	if (program->is_limited == TRUE)
 	{
@@ -54,8 +54,6 @@ int	limited_program(t_program *program, t_philo *philo)
 			pthread_mutex_unlock(&program->count_lock);
 			pthread_mutex_unlock(philo->right_fork);
 			pthread_mutex_unlock(philo->left_fork);
-			return (0);
 		}
 	}
-	return (1);
 }

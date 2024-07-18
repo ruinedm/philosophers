@@ -6,7 +6,7 @@
 /*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/17 08:26:34 by mboukour          #+#    #+#             */
-/*   Updated: 2024/07/17 14:39:32 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/07/18 22:25:22 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,7 @@ struct s_program
 	time_t	start_timestamp;
 	t_bool	is_limited;
 	int		number_of_eat;
+	int		observer_sleep;
 	t_philo	*philos_arr;
 };
 
@@ -128,4 +129,6 @@ void	init_philo(t_program *program);
 
 void	observe_philos(t_program *program);
 void	kill_all(t_program *program, int already_dead);
+
+int		ft_abs(int a);
 #endif
