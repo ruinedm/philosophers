@@ -6,7 +6,7 @@
 /*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/17 08:27:12 by mboukour          #+#    #+#             */
-/*   Updated: 2024/07/18 22:26:35 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/07/21 03:35:19 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,7 +88,7 @@ int	parse_and_check(int ac, char **av, t_program *program)
 		if (!program->number_of_eat || error_flag)
 			return (error_handler(INPUT_ERROR), FALSE);
 	}
-	if (program->time_to_die >= program->philo_count * 100
+	if (program->time_to_die >= program->philo_count * 10
 		&& ft_abs(program->time_to_die
 			- (program->time_to_eat + program->time_to_sleep)) == 1)
 		program->observer_sleep = 0;
