@@ -6,7 +6,7 @@
 /*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/17 02:44:42 by mboukour          #+#    #+#             */
-/*   Updated: 2024/07/25 05:07:05 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/07/25 05:59:37 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,12 +38,12 @@ static int	init_routine(t_program *program, t_philo *philo)
 	philo->last_eat_str = last_eat_str;
 	philo->last_eat_sem = sem_open(last_eat_str, O_CREAT | O_EXCL, 0644, 1);
 	if (philo->last_eat_sem == SEM_FAILED)
-		return (perror("sem_open"), exit(EXIT_FAILURE), 0);
+		return (free(last_eat_str), perror("sem_open"), exit(EXIT_FAILURE), 0);
 	philo->last_eat = get_timestamp(program);
 	if (pthread_create(&philo->philo_observer, NULL, philo_observer_routine,
-			(void *)philo) == -1)
+			(void *)philo))
 		return (init_routine_error(philo, CREATE_THREAD_ERROR), 0);
-	if (pthread_detach(philo->philo_observer) == -1)
+	if (pthread_detach(philo->philo_observer))
 		return (init_routine_error(philo, DETACH_THREAD_ERROR), 0);
 	return (0);
 }
