@@ -6,7 +6,7 @@
 /*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/26 21:26:13 by mboukour          #+#    #+#             */
-/*   Updated: 2024/07/18 21:38:45 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/07/25 04:11:10 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,6 @@ int	initialize_program(t_program *program)
 	program->start_timestamp = get_time();
 	if (program->start_timestamp == 0)
 		return (error_handler(TIME_ERROR), FALSE);
-	program->is_locked = FALSE;
 	program->dead_flag = FALSE;
 	return (initialize_mutexes(program));
 }

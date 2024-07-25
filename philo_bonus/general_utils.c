@@ -6,7 +6,7 @@
 /*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/17 08:28:39 by mboukour          #+#    #+#             */
-/*   Updated: 2024/07/17 12:16:53 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/07/25 04:32:25 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,11 +34,10 @@ void	error_handler(int mode)
 		print_error("Error: Could not allocate memory!\n");
 	else if (mode == CREATE_THREAD_ERROR)
 		print_error("Error: Could not create thread!\n");
-	else if (mode == JOIN_THREAD_ERROR)
-		print_error("Error: Could not join thread!\n");
+	else if (mode == DETACH_THREAD_ERROR)
+		print_error("Error: Could not detach thread!\n");
 	else if (mode == MUTEX_INIT_ERROR)
 		print_error("Error: Could not initialize mutex!\n");
-	exit(EXIT_FAILURE);
 }
 
 void	clean_all(t_program *program)

@@ -6,7 +6,7 @@
 /*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/26 21:04:56 by mboukour          #+#    #+#             */
-/*   Updated: 2024/07/17 11:48:29 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/07/25 05:10:16 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@ static void	clean_program(t_program *program)
 {
 	pthread_mutex_destroy(&program->print_lock);
 	pthread_mutex_destroy(&program->dead_lock);
+	pthread_mutex_destroy(&program->start_lock);
 	if (program->is_limited == TRUE)
 		pthread_mutex_destroy(&program->count_lock);
 }

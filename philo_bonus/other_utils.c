@@ -6,7 +6,7 @@
 /*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/17 08:28:59 by mboukour          #+#    #+#             */
-/*   Updated: 2024/07/17 12:20:24 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/07/25 04:24:32 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,13 +45,15 @@ void	first_sems(t_program *program)
 			program->philo_count);
 	if (program->forks == SEM_FAILED)
 	{
+		free(program->philos_arr);
 		perror("sem_open");
 		exit(EXIT_FAILURE);
 	}
 	sem_unlink("print_sem");
 	program->print_sem = sem_open("print_sem", O_CREAT | O_EXCL, 0644, 1);
-	if (program->forks == SEM_FAILED)
+	if (program->print_sem == SEM_FAILED)
 	{
+		free(program->philos_arr);
 		sem_close(program->forks);
 		sem_unlink("fork_sem");
 		perror("sem_open");

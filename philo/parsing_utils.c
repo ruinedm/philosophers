@@ -6,13 +6,13 @@
 /*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/26 20:53:35 by mboukour          #+#    #+#             */
-/*   Updated: 2024/07/17 02:42:47 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/07/25 04:13:05 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-t_bool	is_num(char *str)
+int	is_num(char *str)
 {
 	int	i;
 
@@ -32,14 +32,14 @@ t_bool	is_num(char *str)
 	return (TRUE);
 }
 
-t_bool	is_pos_num(char *str)
+int	is_pos_num(char *str)
 {
 	if (str[0] == '-')
 		return (FALSE);
 	return (TRUE);
 }
 
-t_bool	is_valid_av(int ac, char **av)
+int	is_valid_av(int ac, char **av)
 {
 	int	i;
 

@@ -6,7 +6,7 @@
 /*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/26 22:07:14 by mboukour          #+#    #+#             */
-/*   Updated: 2024/07/17 14:29:25 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/07/25 05:10:31 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,8 +48,8 @@ int	start_the_simulation(t_program *program)
 int	init_philo_error(t_program *program, t_philo *philos_arr,
 	int i)
 {
-	error_handler(MALLOC_ERROR);
 	clean_on_error(program, philos_arr, i);
+	error_handler(MALLOC_ERROR);
 	return (FALSE);
 }
 

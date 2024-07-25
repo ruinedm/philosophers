@@ -6,13 +6,13 @@
 /*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/17 08:27:12 by mboukour          #+#    #+#             */
-/*   Updated: 2024/07/21 03:35:19 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/07/25 04:13:05 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-t_bool	is_num(char *str)
+int	is_num(char *str)
 {
 	int	i;
 
@@ -32,14 +32,14 @@ t_bool	is_num(char *str)
 	return (TRUE);
 }
 
-t_bool	is_pos_num(char *str)
+int	is_pos_num(char *str)
 {
 	if (str[0] == '-')
 		return (FALSE);
 	return (TRUE);
 }
 
-t_bool	is_valid_av(int ac, char **av)
+int	is_valid_av(int ac, char **av)
 {
 	int	i;
 
@@ -68,7 +68,6 @@ int	parse_settter(t_program *program, char **av, int *error_flag)
 	program->start_timestamp = get_time();
 	if (program->start_timestamp == 0)
 		return (error_handler(TIME_ERROR), FALSE);
-	program->is_locked = FALSE;
 	return (TRUE);
 }
 

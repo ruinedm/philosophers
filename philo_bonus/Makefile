@@ -8,11 +8,11 @@ HEADER = philo.h
 all: $(NAME)
 
 $(NAME): $(OBJ)
-	@($(CC) $(FLAGS) -g $^ -o $@)
+	@($(CC) $(FLAGS) $^ -o $@)
 	@echo "Executable linked successfully!"
 
 %.o: %.c $(HEADER)
-	@($(CC) $(FLAGS) -c -g $< -o $@)
+	@($(CC) $(FLAGS) -c $< -o $@)
 	@echo "Compiled $<"
 
 clean:

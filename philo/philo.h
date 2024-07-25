@@ -6,7 +6,7 @@
 /*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/26 20:53:44 by mboukour          #+#    #+#             */
-/*   Updated: 2024/07/18 22:26:46 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/07/25 05:11:04 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,6 @@
 # include <limits.h>
 # include <sys/time.h>
 
-typedef int					t_bool;
 typedef struct s_philo		t_philo;
 typedef struct s_program	t_program;
 
@@ -32,13 +31,12 @@ struct s_program
 	pthread_mutex_t	start_lock;
 	pthread_t		observer_id;
 	int				start_flag;
-	int				is_locked;
 	int				philo_count;
 	int				time_to_die;
 	int				time_to_eat;
 	int				time_to_sleep;
 	time_t			start_timestamp;
-	t_bool			is_limited;
+	int				is_limited;
 	int				number_of_eat;
 	int				eat_count;
 	int				dead_flag;
@@ -114,7 +112,7 @@ void	*philo_routine(void *void_philo);
 void	set_as_dead(t_program *program);
 void	join_on_error(t_program *program, int current);
 
-t_bool	is_valid_av(int ac, char **av);
+int		is_valid_av(int ac, char **av);
 int		initialize_mutexes(t_program *program);
 int		start_the_simulation(t_program *program);
 

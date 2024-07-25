@@ -6,7 +6,7 @@
 /*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/17 08:26:34 by mboukour          #+#    #+#             */
-/*   Updated: 2024/07/18 22:25:22 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/07/25 05:06:11 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,6 @@
 # include <sys/wait.h>
 # include <signal.h>
 
-typedef int					t_bool;
 typedef struct s_philo		t_philo;
 typedef struct s_program	t_program;
 
@@ -31,14 +30,13 @@ struct s_program
 {
 	sem_t	*forks;
 	sem_t	*print_sem;
-	int		is_locked;
 	int		philo_count;
 	int		time_to_die;
 	int		time_to_eat;
 	int		time_to_sleep;
 	int		philos_done_eating;
 	time_t	start_timestamp;
-	t_bool	is_limited;
+	int		is_limited;
 	int		number_of_eat;
 	int		observer_sleep;
 	t_philo	*philos_arr;
@@ -62,7 +60,7 @@ enum e_ERROR_MODES
 	TIME_ERROR,
 	MALLOC_ERROR,
 	CREATE_THREAD_ERROR,
-	JOIN_THREAD_ERROR,
+	DETACH_THREAD_ERROR,
 	MUTEX_INIT_ERROR,
 	PROCESS_FATAL_ERROR
 };
@@ -71,20 +69,6 @@ enum e_BOOLEAN
 {
 	FALSE,
 	TRUE
-};
-
-enum e_ITER_MODES
-{
-	CREATE_THREADS,
-	JOIN_THREADS,
-	LINK_FORKS,
-	DESTROY_FORKS
-};
-
-enum e_FORKS
-{
-	RIGHT_FORK,
-	LEFT_FORK
 };
 
 enum e_CLEAN_MODES
@@ -106,17 +90,9 @@ void	error_handler(int mode);
 int		parse_and_check(int ac, char **av, t_program *original);
 int		ft_atoi(const char *str, int *error_flag);
 void	init_philo(t_program *program);
-void	*observer_of_all(void *void_program);
-int		check_dead(t_program *program);
 void	exit_procedure(int status, t_program *program);
-void	set_as_dead(t_program *program);
 char	*ft_strjoin(const char *s1, const char *s2);
 char	*ft_itoa(int n);
-
-void	create_thread_error(t_program *program, int i);
-int		create_threads(t_program *program);
-int		join_threads(t_program *program);
-
 time_t	get_time(void);
 time_t	get_timestamp(t_program *program);
 int		ft_usleep(size_t milliseconds);
@@ -127,8 +103,10 @@ void	sleep_think_philo(t_program *program, t_philo *philo);
 void	print_error(char *str);
 void	init_philo(t_program *program);
 
+void	*philo_observer_routine(void *void_philo);
 void	observe_philos(t_program *program);
 void	kill_all(t_program *program, int already_dead);
+void	philo_routine(t_philo *philo);
 
 int		ft_abs(int a);
 #endif

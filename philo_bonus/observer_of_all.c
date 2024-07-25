@@ -6,7 +6,7 @@
 /*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/17 08:22:11 by mboukour          #+#    #+#             */
-/*   Updated: 2024/07/18 21:42:38 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/07/25 04:26:17 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,6 @@
 
 void	exit_procedure(int status, t_program *program)
 {
-	int	i;
-
-	i = 0;
 	free(program->philos_arr);
 	sem_close(program->forks);
 	sem_unlink("fork_sem");
@@ -46,7 +43,7 @@ void	something_happened(int status, t_program *program, int i)
 	{
 		print_error("One of the simulation's processes (a philosopher) ");
 		print_error("has received an external signal, ");
-		print_error("the program will terminate now.");
+		print_error("the program will terminate now.\n");
 		kill_on_error(program, program->philo_count);
 		exit_procedure(EXIT_FAILURE, program);
 	}
@@ -66,7 +63,7 @@ void	observe_philos(t_program *program)
 				something_happened(status, program, i);
 			if (program->is_limited
 				&& program->philos_done_eating == program->philo_count)
-				exit(EXIT_SUCCESS);
+				exit_procedure(EXIT_SUCCESS, program);
 			i++;
 		}
 	}
